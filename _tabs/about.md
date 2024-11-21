@@ -250,8 +250,7 @@ order: 4
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maze Game</title>
   <style>
-
-
+   
     .maze-outer-container {
       text-align: center;
     }
@@ -322,6 +321,11 @@ order: 4
     .maze-move-btn:hover {
       background-color: #218838;
     }
+
+    /* Hide controls after maze is solved */
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -358,6 +362,7 @@ order: 4
 
     const maze = generateRandomMaze();
     let playerPosition = { x: 0, y: 0 };
+    let gameWon = false;
 
     // Render the maze inside the container
     function renderMaze() {
@@ -378,12 +383,16 @@ order: 4
 
           if (playerPosition.x === x && playerPosition.y === y) {
             mazeCell.classList.add('maze-player');
-            // Show "Maze Game" message instead of "🥳 Maze Solved!" when the player reaches the end
-            if (maze[playerPosition.y][playerPosition.x] === 'end') {
+            // Show "Maze Won" message when the player reaches the end
+            if (maze[playerPosition.y][playerPosition.x] === 'end' && !gameWon) {
+              gameWon = true; // Prevent multiple "Won" messages
               const message = document.createElement('div');
               message.classList.add('maze-message');
-              message.textContent = 'Maze Game';  // Replaced "🥳 Maze Solved!" with "Maze Game"
+              message.textContent = 'Maze Won!';
               mazeCell.appendChild(message);
+
+              // Remove control buttons
+              document.querySelector('.maze-controls').classList.add('hidden');
             }
           }
 
