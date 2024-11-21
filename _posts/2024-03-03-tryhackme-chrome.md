@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Chrome'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [pcap, smb, wireshark, dnspy, windows, chrome, dpapi, mimikatz]
 render_with_liquid: false

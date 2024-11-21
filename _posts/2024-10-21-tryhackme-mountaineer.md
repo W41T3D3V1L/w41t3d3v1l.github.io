@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: Mountaineer"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, nginx, file disclosure, roundcube, vhost, wordpress, wpscan, cupp, keepass]
 render_with_liquid: false

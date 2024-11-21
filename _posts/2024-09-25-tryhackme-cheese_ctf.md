@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: Cheese CTF"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, portspoofing, sqli, lfi, rce, ssh, service, timer, suid, sudo]
 render_with_liquid: false

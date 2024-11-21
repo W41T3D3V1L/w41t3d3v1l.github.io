@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: Extracted"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [pcap, wireshark, keepass, xor, base64, powershell, tshark]
 render_with_liquid: false

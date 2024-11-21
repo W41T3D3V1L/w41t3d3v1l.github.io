@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Airplane'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, file disclosure, gdb, suid, sudo]
 render_with_liquid: false

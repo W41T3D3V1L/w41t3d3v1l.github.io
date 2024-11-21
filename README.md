@@ -1,3 +1,3 @@
-# C3L1KD.github.io
+# c3l1kd.github.io
 
-https://C3L1KD.github.io
+https://c3l1kd.github.io

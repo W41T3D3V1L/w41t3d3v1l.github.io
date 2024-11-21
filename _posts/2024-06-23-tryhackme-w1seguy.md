@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: W1seGuy'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [nc, xor, python]
 render_with_liquid: false

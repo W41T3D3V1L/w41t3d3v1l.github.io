@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: Block"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [pcap, wireshark, lsass, pypykatz, python, smb]
 render_with_liquid: false

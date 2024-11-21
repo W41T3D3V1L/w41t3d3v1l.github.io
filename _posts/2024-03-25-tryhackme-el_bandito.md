@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: El Bandito'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, request smuggling, websocket, proxy]
 render_with_liquid: false

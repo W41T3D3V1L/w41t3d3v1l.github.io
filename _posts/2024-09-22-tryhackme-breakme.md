@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: Breakme"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, ffuf, fuzz, wordpress, brute-force, chisel, command injection, race condition, sudo, python, jail]
 render_with_liquid: false

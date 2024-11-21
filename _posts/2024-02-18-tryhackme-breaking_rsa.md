@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Breaking RSA'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, rsa, cryptography, python, ssh]
 render_with_liquid: false

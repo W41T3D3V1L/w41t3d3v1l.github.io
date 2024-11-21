@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: Brains"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, authentication bypass, rce, splunk]
 render_with_liquid: false

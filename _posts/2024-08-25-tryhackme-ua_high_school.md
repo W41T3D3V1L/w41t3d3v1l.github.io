@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: U.A. High School"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, ffuf, fuzz, php, steganography, sudo, arbitrary file write]
 render_with_liquid: false

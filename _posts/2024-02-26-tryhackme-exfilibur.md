@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Exfilibur'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, cve, file disclosure, xxe, firewall, rce, windows, privilege]
 render_with_liquid: false

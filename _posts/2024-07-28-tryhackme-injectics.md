@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: Injectics"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, javascript, sql injection, ssti, rce]
 render_with_liquid: false

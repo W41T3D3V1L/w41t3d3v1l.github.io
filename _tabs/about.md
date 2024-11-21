@@ -4,4 +4,4 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-### Hey, I'm C3L1KD.
+### Hey, I'm c3l1kd.

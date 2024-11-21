@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: Hack Back"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [reverse engineering, ghidra, phishing, nc, blockchain, smart contract]
 render_with_liquid: false

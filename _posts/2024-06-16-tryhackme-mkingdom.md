@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: mKingdom'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, fuzzing, weak credentials, concrete5, cms, rce, suid, cron, hosts]
 render_with_liquid: false

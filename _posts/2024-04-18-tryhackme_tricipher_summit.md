@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: TriCipher Summit'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, js, crypto, python, blockchain, foundry]
 render_with_liquid: false

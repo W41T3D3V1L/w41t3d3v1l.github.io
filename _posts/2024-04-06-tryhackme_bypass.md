@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Bypass'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, nc, curl, ping, rce]
 render_with_liquid: false

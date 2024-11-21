@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: SeeTwo"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [pcap, wireshark, http, tcp, c2, python, xor, base64]
 render_with_liquid: false

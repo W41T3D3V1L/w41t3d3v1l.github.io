@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: The London Bridge"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, ffuf, fuzz, ssrf, kernel exploit, firefox]
 render_with_liquid: false

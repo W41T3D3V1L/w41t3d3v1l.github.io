@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: WhyHackMe'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [ftp, web, xss, sudo, iptables, firewall, pcap, tls, cgi-bin]
 render_with_liquid: false

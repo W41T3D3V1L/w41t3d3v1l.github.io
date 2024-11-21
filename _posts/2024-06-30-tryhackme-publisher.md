@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Publisher'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, fuzz, ffuf, php, rce, suid, apparmor]
 render_with_liquid: false

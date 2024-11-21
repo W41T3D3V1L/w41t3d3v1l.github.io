@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: Hammer"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, ffuf, python, rate-limit, brute-force, authentication bypass, jwt, remote code execution]
 render_with_liquid: false

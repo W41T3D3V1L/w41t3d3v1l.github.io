@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Clocky'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, ffuf, python, flask, ssrf, mysql, hashcat]
 render_with_liquid: false

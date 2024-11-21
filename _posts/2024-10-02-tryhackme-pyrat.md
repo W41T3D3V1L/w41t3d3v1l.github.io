@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: Pyrat"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [python, git, brute-force]
 render_with_liquid: false

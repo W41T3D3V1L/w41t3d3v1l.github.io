@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: New York Flankees'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, padding oracle, docker]
 render_with_liquid: false

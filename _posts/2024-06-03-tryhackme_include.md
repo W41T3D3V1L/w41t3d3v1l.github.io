@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Include'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, api, prototype pollution, ssrf, lfi, log poisoning]
 render_with_liquid: false

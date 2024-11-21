@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: NanoCherryCTF'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, fuzz, vhost, ffuf, hydra, brute-force, cron, sstv, steganography]
 render_with_liquid: false

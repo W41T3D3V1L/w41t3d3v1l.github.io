@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Hack Smarter Security'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, file disclosure, ssh, windows, service]
 render_with_liquid: false

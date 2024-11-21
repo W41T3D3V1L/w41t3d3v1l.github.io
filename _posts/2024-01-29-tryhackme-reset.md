@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Reset'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [smb, ntlm_theft, bloodhound, windows, active directory, domain, constrained delegation]
 render_with_liquid: false

@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Dodge'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, vhost, subdomain, ufw, firewall, ftp, sudo, apt]
 render_with_liquid: false

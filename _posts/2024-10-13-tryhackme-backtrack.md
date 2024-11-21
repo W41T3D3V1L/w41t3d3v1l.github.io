@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: Backtrack"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, path traversal, file disclosure, tomcat, sudo, insecure file upload, php, tty]
 render_with_liquid: false

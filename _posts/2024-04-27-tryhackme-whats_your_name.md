@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Whats Your Name?'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, js, xss, csrf]
 render_with_liquid: false

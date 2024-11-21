@@ -1,6 +1,6 @@
 ---
 title: "TryHackMe: K2"
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, windows, active directory, ffuf, vhost, xss, sqli, ssh, adm, log, netexec, kerbrute, winrm, brute-force, secretsdump, bloodhound, responder, rbcd]
 render_with_liquid: false

@@ -1,6 +1,6 @@
 ---
 title: 'TryHackMe: Creative'
-author: C3L1KD
+author: c3l1kd
 categories: [TryHackMe]
 tags: [web, ffuf, fuzzing, vhost, ssrf, ssh, john, sudo, ld_preload]
 render_with_liquid: false
