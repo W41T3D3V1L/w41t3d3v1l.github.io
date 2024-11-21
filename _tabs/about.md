@@ -254,20 +254,25 @@ order: 4
   }
 
   input[type="number"] {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    padding: 12px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 2px solid #007bff;
+    width: 300px;
+    max-width: 90%;
+    margin-top: 20px;
   }
 
   button {
-    padding: 10px 20px;
-    font-size: 16px;
-    margin-top: 20px;
-    border: none;
+    padding: 12px 24px;
+    font-size: 18px;
+    border-radius: 8px;
     background-color: #28a745;
     color: white;
+    border: none;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
   }
 
   button:hover {
