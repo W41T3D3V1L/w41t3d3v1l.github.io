@@ -243,13 +243,14 @@ order: 4
 </script>
 
 
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maze Game</title>
   <style>
-   
+
 
     .maze-outer-container {
       text-align: center;
@@ -308,7 +309,6 @@ order: 4
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin-top: 20px;
     }
 
     .maze-move-btn {
@@ -322,10 +322,6 @@ order: 4
     .maze-move-btn:hover {
       background-color: #218838;
     }
-
-    .hidden {
-      display: none;
-    }
   </style>
 </head>
 <body>
@@ -333,7 +329,7 @@ order: 4
     <div class="maze-container">
       <!-- This is where the maze will be rendered dynamically -->
     </div>
-    <div class="maze-controls hidden">
+    <div class="maze-controls">
       <button class="maze-move-btn" id="up">Up</button>
       <button class="maze-move-btn" id="left">Left</button>
       <button class="maze-move-btn" id="right">Right</button>
@@ -382,14 +378,12 @@ order: 4
 
           if (playerPosition.x === x && playerPosition.y === y) {
             mazeCell.classList.add('maze-player');
-            // Show win message in the same cell
+            // Show "Maze Game" message instead of "🥳 Maze Solved!" when the player reaches the end
             if (maze[playerPosition.y][playerPosition.x] === 'end') {
               const message = document.createElement('div');
               message.classList.add('maze-message');
-              message.textContent = '🥳 Maze Solved!';
+              message.textContent = 'Maze Game';  // Replaced "🥳 Maze Solved!" with "Maze Game"
               mazeCell.appendChild(message);
-              document.querySelector('.maze-controls').classList.add('hidden'); // Hide controls
-              mazeContainer.style.display = 'none';  // Hide the maze container
             }
           }
 
