@@ -87,7 +87,7 @@ order: 4
 </style>
 
 <script>
-  const correctNumber = 7; // Set the correct number
+  const correctNumber = 8; // Set the correct number
   const guessInput = document.getElementById("guess");
   const messageElement = document.getElementById("message");
   const bioContainer = document.getElementById("bio-container");
