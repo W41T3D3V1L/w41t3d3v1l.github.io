@@ -19,6 +19,10 @@ platforms:
   - type: Linkedin
     icon: "fab fa-linkedin"
     link: "https://www.linkedin.com/sharing/share-offsite/?url=URL"
+  
+  - type: tryhackme
+    icon: "/assets/img/thm-icon.png"
+    link: "https://www.tryhackme.com/sharing/share-offsite/?url=URL"
   #
   # - type: Weibo
   #   icon: "fab fa-weibo"

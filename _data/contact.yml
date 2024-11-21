@@ -8,6 +8,7 @@
   # Add TryHackMe Contact Option
 - type: tryhackme
   icon: "/assets/img/thm-icon.png"
+  url:  '/assets/img/thm-icon.png'    
 
 #- type: email
 #  icon: "fas fa-envelope"
@@ -22,9 +23,9 @@
 #   icon: 'fab fa-mastodon'   # icons powered by <https://fontawesome.com/>
 #   url:  ''                  # Fill with your Mastodon account page, rel="me" will be applied for verification
 #
-- type: linkedin
-  icon: '/assets/img/thm-icon.png'   # icons powered by <https://fontawesome.com/>
-  url:  '/assets/img/thm-icon.png'                  # Fill with your Linkedin homepage
+# - type: linkedin
+#   icon: '/assets/img/thm-icon.png'   # icons powered by <https://fontawesome.com/>
+#   url:  '/assets/img/thm-icon.png'                  # Fill with your Linkedin homepage
 #
 # - type: stack-overflow
 #   icon: 'fab fa-stack-overflow'
