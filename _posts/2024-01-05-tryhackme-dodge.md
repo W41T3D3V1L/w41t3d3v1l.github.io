@@ -54,8 +54,16 @@ With a nmap scan, there are three ports open:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Important Note</title>
   <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f9f9f9;
+      font-family: Arial, sans-serif;
+    }
     .note-container {
       border: 2px solid #4CAF50;
       border-radius: 10px;
@@ -63,6 +71,7 @@ With a nmap scan, there are three ports open:
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       max-width: 600px;
       text-align: center;
+      background-color: #fff;
     }
     .note-container h1 {
       margin-top: 0;
