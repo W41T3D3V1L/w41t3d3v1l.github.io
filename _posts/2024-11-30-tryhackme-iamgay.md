@@ -1,7 +1,7 @@
 ---
-title: "TryHackMe: Tester"
+title: "TryHackMe: iamgay"
 author: c3l1kd
-categories: [Hackthbox]
+categories: [Tryhackme]
 tags: [windows, rce, unquoted service path, persistence, sysmon]
 render_with_liquid: false
 img_path: /images/tryhackme_mouse_trap/
