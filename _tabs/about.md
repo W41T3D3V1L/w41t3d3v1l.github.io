@@ -247,6 +247,7 @@ order: 4
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Puzzle Game</title>
   <style>
     code {
       font-family: 'Courier New', Courier, monospace;
@@ -254,14 +255,80 @@ order: 4
       border-radius: 4px;
       color: #d14;
     }
+
+    #puzzle-container {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    #bio-container {
+      display: none;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      border: none;
+      background-color: #28a745;
+      color: white;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .message {
+      font-size: 18px;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
-  <p>
-    My name is celikd, and I am a <code>full-stack web developer</code> and a passionate <code>pentester</code>. 
-    <code>Hacking is my true passion</code>, and through this site, you'll find all my <code>TryHackMe (THM)</code> 
-    and <code>Hack The Box (HTB) write-ups</code>. I combine my skills in <code>web development</code> with 
-    <code>security expertise</code> to explore and solve challenges in the world of <code>cybersecurity</code>.
-  </p>
+  <div id="puzzle-container">
+    <h1>Welcome to the Puzzle Game!</h1>
+    <p>Guess the secret number to unlock the bio.</p>
+    <input type="number" id="guess" placeholder="Enter a number between 1 and 10">
+    <button onclick="checkGuess()">Submit Guess</button>
+    <p class="message" id="message"></p>
+  </div>
+
+  <div id="bio-container">
+    <p>
+      My name is celikd, and I am a <code>full-stack web developer</code> and a passionate <code>pentester</code>. 
+      <code>Hacking is my true passion</code>, and through this site, you'll find all my <code>TryHackMe (THM)</code> 
+      and <code>Hack The Box (HTB) write-ups</code>. I combine my skills in <code>web development</code> with 
+      <code>security expertise</code> to explore and solve challenges in the world of <code>cybersecurity</code>.
+    </p>
+  </div>
+
+  <script>
+    // Secret number to unlock the bio
+    const secretNumber = 7;
+
+    function checkGuess() {
+      const userGuess = document.getElementById("guess").value;
+      const messageElement = document.getElementById("message");
+
+      if (userGuess == secretNumber) {
+        messageElement.textContent = "Congratulations! You've guessed the right number. Here is the bio!";
+        document.getElementById("bio-container").style.display = "block";
+        document.getElementById("puzzle-container").style.display = "none";
+      } else {
+        messageElement.textContent = "Wrong guess! Try again.";
+      }
+    }
+  </script>
 </body>
 </html>
+
