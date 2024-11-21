@@ -7,10 +7,10 @@
   icon: "fa-brands fa-x-twitter"
   # Add TryHackMe Contact Option
 - type: tryhackme
-  icon: "fa-brands fa-x-twitter"
+  icon: "/assets/img/thm-icon.png"
 
-- type: email
- icon: "fas fa-envelope"
+#- type: email
+#  icon: "fas fa-envelope"
 #  noblank: true # open link in current tab
 
 #- type: rss
