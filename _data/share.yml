@@ -21,7 +21,7 @@ platforms:
   #   link: "https://www.linkedin.com/sharing/share-offsite/?url=URL"
   
   - type: tryhackme
-    icon: "/assets/img/thm-icon.png"
+    icon: "https://tryhackme.com/img/favicon.png"
     link: "https://www.tryhackme.com/sharing/share-offsite/?url=URL"
   #
   # - type: Weibo
