@@ -6,8 +6,6 @@ order: 4
 
 ### Hey, I'm c3l1kd.
 
-
-
 <head>
   <link
     rel="stylesheet"
@@ -25,41 +23,37 @@ order: 4
   <div class="thm-avatar-outer">
     <div class="thm-avatar"></div>
   </div>
-  <div class="badge-user-details">
-    <div class="title-wrapper">
-      <span class="user_name">0XC3L1KD</span>
+  <div class="thm-badge-user-details">
+    <div class="thm-title-wrapper">
+      <span class="thm-user_name">0XC3L1KD</span>
       <div>
-        <i class="fa-solid fa-bolt-lightning rank-icon"></i>
-        <span class="rank-title">[0xD]</span>
+        <i class="fa-solid fa-bolt-lightning thm-rank-icon"></i>
+        <span class="thm-rank-title">[0xD]</span>
       </div>
     </div>
-    <div class="details-wrapper">
-      <div class="details-icon-wrapper">
-        <i class="fa-solid fa-trophy detail-icons trophy-icon"></i>
-        <span class="details-text">31</span>
+    <div class="thm-details-wrapper">
+      <div class="thm-details-icon-wrapper">
+        <i class="fa-solid fa-trophy thm-detail-icons thm-trophy-icon"></i>
+        <span class="thm-details-text">31</span>
       </div>
-      <div class="details-icon-wrapper">
-        <i class="fa-solid fa-fire detail-icons fire-icon"></i>
-        <span class="details-text">0 days</span>
+      <div class="thm-details-icon-wrapper">
+        <i class="fa-solid fa-fire thm-detail-icons thm-fire-icon"></i>
+        <span class="thm-details-text">0 days</span>
       </div>
-      <div class="details-icon-wrapper">
-        <i class="fa-solid fa-award detail-icons award-icon"></i>
-        <span class="details-text">62</span>
+      <div class="thm-details-icon-wrapper">
+        <i class="fa-solid fa-award thm-detail-icons thm-award-icon"></i>
+        <span class="thm-details-text">62</span>
       </div>
-      <div class="details-icon-wrapper">
-        <i class="fa-solid fa-door-closed detail-icons door-closed-icon"></i>
-        <span class="details-text">888</span>
+      <div class="thm-details-icon-wrapper">
+        <i class="fa-solid fa-door-closed thm-detail-icons thm-door-closed-icon"></i>
+        <span class="thm-details-text">888</span>
       </div>
     </div>
     <a href="https://tryhackme.com" class="thm-link" target="_blank">tryhackme.com</a>
   </div>
 </div>
 <style>
-  body {
-    width: 329px;
-    height: 88px;
-    margin: 0;
-  }
+
 
   #thm-badge {
     width: 327px;
@@ -101,29 +95,29 @@ order: 4
     box-shadow: 0 0 3px 0 #303030;
   }
 
-  .badge-user-details {
+  .thm-badge-user-details {
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
 
-  .details-icon-wrapper {
+  .thm-details-icon-wrapper {
     display: flex;
     gap: 5px;
   }
 
-  .details-wrapper {
+  .thm-details-wrapper {
     display: flex;
     gap: 8px;
   }
 
-  .title-wrapper {
+  .thm-title-wrapper {
     display: flex;
     align-items: center;
     gap: 6px;
   }
 
-  .user_name {
+  .thm-user_name {
     font-family: 'Ubuntu', sans-serif;
     font-style: normal;
     font-weight: 500;
@@ -140,7 +134,7 @@ order: 4
     overflow: hidden;
   }
 
-  .rank-icon {
+  .thm-rank-icon {
     width: 8px;
     height: 10px;
     font-style: normal;
@@ -153,7 +147,7 @@ order: 4
     transform: rotate(0.2deg);
   }
 
-  .rank-title {
+  .thm-rank-title {
     font-family: Ubuntu, sans-serif;
     font-style: normal;
     font-weight: 500;
@@ -164,14 +158,14 @@ order: 4
     transform: rotate(0.2deg);
   }
 
-  .detail-icons {
+  .thm-detail-icons {
     font-weight: 900;
     text-align: center;
 
     transform: rotate(0.2deg);
   }
 
-  .trophy-icon {
+  .thm-trophy-icon {
     color: #9ca4b4;
     width: 13px;
     height: 13px;
@@ -180,7 +174,7 @@ order: 4
     line-height: 11px;
   }
 
-  .fire-icon {
+  .thm-fire-icon {
     width: 12px;
     height: 13px;
     font-style: normal;
@@ -189,7 +183,7 @@ order: 4
     color: #a3ea2a;
   }
 
-  .award-icon {
+  .thm-award-icon {
     width: 10px;
     height: 13px;
     font-style: normal;
@@ -198,7 +192,7 @@ order: 4
     color: #d752ff;
   }
 
-  .door-closed-icon {
+  .thm-door-closed-icon {
     width: 14px;
     height: 12px;
     font-style: normal;
@@ -207,7 +201,7 @@ order: 4
     color: #719cf9;
   }
 
-  .details-text {
+  .thm-details-text {
     font-family: Ubuntu, sans-serif;
     font-style: normal;
     font-weight: 400;
@@ -243,5 +237,3 @@ order: 4
     window.open('https://tryhackme.com/p/0XC3L1KD', '_blank');
   });
 </script>
-
-
