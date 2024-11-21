@@ -36,7 +36,7 @@ order: 4
     with <span class="highlight">security expertise</span> to explore and solve challenges in the world of cybersecurity. 
     I hope you enjoy exploring my projects!
   </p>
-  <img src="https://tryhackme-badges.s3.amazonaws.com/0XC3L1KD.png" alt="Yise" />
+  <img src="https://tryhackme-badges.s3.amazonaws.com/0XC3L1KD.png?update=1" alt="Yise" />
 
 </div>
 
