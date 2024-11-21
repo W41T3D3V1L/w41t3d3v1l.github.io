@@ -9,8 +9,8 @@
 - type: tryhackme
   icon: "fa-brands fa-x-twitter"
 
-#- type: email
-#  icon: "fas fa-envelope"
+- type: email
+ icon: "fas fa-envelope"
 #  noblank: true # open link in current tab
 
 #- type: rss
