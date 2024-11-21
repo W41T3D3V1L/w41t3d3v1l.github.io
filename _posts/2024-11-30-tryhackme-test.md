@@ -1,7 +1,7 @@
 ---
-title: 'TryHackMe: test'
+title: 'TryHackMe: Tester'
 author: c3l1kd
-categories: [hackthebox]
+categories: [HacktheBox]
 tags: [web, vhost, subdomain, ufw, firewall, ftp, sudo, apt]
 render_with_liquid: false
 img_path: /images/tryhackme_dodge/
@@ -9,7 +9,7 @@ image:
   path: room_image.webp
 ---
 
-**test** was another purple team room where we started on the attacker side and exploited a remote code execution **(RCE)** vulnerability to gain a foothold. After that, we exploited an unquoted service path to escalate our privileges and established basic persistence.
+Dodge started by inspecting the certificate of a https webserver to get a list of subdomains and enumerating these subdomains to find a PHP endpoint that allowed disabling the UFW firewall. After disabling the firewall, it was possible to access a FTP server and get a SSH key for a user, which allowed us to get a shell on the machine. After this, using port forwarding to access an internal website and logging in with the credentials found in the comments of the same website gave us credentials for another user. With this new user, we were able to abuse sudo privileges and get a shell as root.
 
 ![Tryhackme Room Link](room_card.webp){: width="600" height="150" .shadow }
 _<https://tryhackme.com/room/dodge>_
@@ -48,3 +48,46 @@ With a nmap scan, there are three ports open:
 - 22/SSH
 - 80/HTTP
 - 443/HTTPS
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    .note-container {
+      border: 2px solid #4CAF50;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      text-align: center;
+      
+    }
+    .note-container h1 {
+      margin-top: 0;
+      color: #4CAF50;
+    }
+    .note-container p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="note-container">
+    <h1>Important Note</h1>
+    <p>
+      This writeup will be released <strong>72 hours after the box is live</strong>.
+    </p>
+  </div>
+</body>
+</html>
