@@ -243,23 +243,22 @@ order: 4
 </script>
 
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maze Game</title>
   <style>
+  
 
-
-    .maze-game-container {
+    .maze-outer-container {
       text-align: center;
     }
 
-    .maze {
+    .maze-container {
       display: grid;
-      grid-template-columns: repeat(4, 50px);
-      grid-template-rows: repeat(3, 50px);
+      grid-template-columns: repeat(5, 50px);
+      grid-template-rows: repeat(5, 50px);
       gap: 5px;
       margin-bottom: 20px;
     }
@@ -267,10 +266,10 @@ order: 4
     .maze-cell {
       width: 50px;
       height: 50px;
-      border: 1px solid #333;
       display: flex;
       justify-content: center;
       align-items: center;
+      border: 1px solid #333;
     }
 
     .maze-start {
@@ -289,14 +288,18 @@ order: 4
       background-color: #fff;
     }
 
+    .maze-player {
+      background-color: blue;
+    }
+
     .maze-controls {
       display: flex;
-      gap: 10px;
       justify-content: center;
+      gap: 10px;
     }
 
     .maze-move-btn {
-      padding: 10px;
+      padding: 10px 20px;
       background-color: #28a745;
       color: white;
       border: none;
@@ -309,52 +312,45 @@ order: 4
   </style>
 </head>
 <body>
-  <div class="maze-game-container">
-    <div class="maze">
-      <div class="maze-cell maze-start"></div>
-      <div class="maze-cell maze-wall"></div>
-      <div class="maze-cell maze-wall"></div>
-      <div class="maze-cell maze-wall"></div>
-      <div class="maze-cell maze-empty"></div>
-      <div class="maze-cell maze-wall"></div>
-      <div class="maze-cell maze-wall"></div>
-      <div class="maze-cell maze-wall"></div>
-      <div class="maze-cell maze-empty"></div>
-      <div class="maze-cell maze-wall"></div>
-      <div class="maze-cell maze-end"></div>
+  <div class="maze-outer-container">
+    <div class="maze-container">
+      <!-- This is where the maze will be rendered dynamically -->
     </div>
     <div class="maze-controls">
       <button class="maze-move-btn" id="up">Up</button>
-      <button class="maze-move-btn" id="down">Down</button>
       <button class="maze-move-btn" id="left">Left</button>
       <button class="maze-move-btn" id="right">Right</button>
+      <button class="maze-move-btn" id="down">Down</button>
     </div>
   </div>
 
   <script>
     const maze = [
-      ['start', 'wall', 'wall', 'wall'],
-      ['empty', 'wall', 'empty', 'empty'],
-      ['empty', 'wall', 'wall', 'end']
+      ['start', 'empty', 'wall', 'empty', 'end'],
+      ['empty', 'wall', 'wall', 'wall', 'empty'],
+      ['empty', 'empty', 'empty', 'empty', 'empty'],
+      ['wall', 'wall', 'empty', 'wall', 'empty'],
+      ['empty', 'empty', 'empty', 'empty', 'empty'],
     ];
 
     let playerPosition = { x: 0, y: 0 };
 
     function renderMaze() {
-      const mazeContainer = document.querySelector('.maze');
+      const mazeContainer = document.querySelector('.maze-container');
       mazeContainer.innerHTML = '';
 
       maze.forEach((row, y) => {
         row.forEach((cell, x) => {
           const mazeCell = document.createElement('div');
           mazeCell.classList.add('maze-cell');
+
           if (cell === 'start') mazeCell.classList.add('maze-start');
+          if (cell === 'end') mazeCell.classList.add('maze-end');
           if (cell === 'wall') mazeCell.classList.add('maze-wall');
           if (cell === 'empty') mazeCell.classList.add('maze-empty');
-          if (cell === 'end') mazeCell.classList.add('maze-end');
 
           if (playerPosition.x === x && playerPosition.y === y) {
-            mazeCell.style.backgroundColor = 'blue'; // Player's position
+            mazeCell.classList.add('maze-player');
           }
 
           mazeContainer.appendChild(mazeCell);
@@ -367,11 +363,11 @@ order: 4
       
       if (direction === 'up' && y > 0 && maze[y - 1][x] !== 'wall') {
         playerPosition.y--;
-      } else if (direction === 'down' && y < 2 && maze[y + 1][x] !== 'wall') {
+      } else if (direction === 'down' && y < 4 && maze[y + 1][x] !== 'wall') {
         playerPosition.y++;
       } else if (direction === 'left' && x > 0 && maze[y][x - 1] !== 'wall') {
         playerPosition.x--;
-      } else if (direction === 'right' && x < 3 && maze[y][x + 1] !== 'wall') {
+      } else if (direction === 'right' && x < 4 && maze[y][x + 1] !== 'wall') {
         playerPosition.x++;
       }
 
