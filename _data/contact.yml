@@ -6,8 +6,8 @@
 - type: twitter
   icon: "fa-brands fa-x-twitter"
   # Add TryHackMe Contact Option
-- type: tryhackme
-  avatar: "https://tryhackme.com/img/favicon.png"
+- type: cuttlefish
+  icon: "fa-brands fa-cuttlefish"
   url:  'https://tryhackme.com/r/p/0XC3L1KD'    
 
 #- type: email
