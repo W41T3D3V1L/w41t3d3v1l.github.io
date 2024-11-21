@@ -60,7 +60,6 @@ With a nmap scan, there are three ports open:
       border: 2px solid #4CAF50;
       border-radius: 10px;
       padding: 20px;
-      background-color: #fff;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       max-width: 600px;
       text-align: center;
@@ -82,11 +81,6 @@ With a nmap scan, there are three ports open:
     <p>
       This note will be released <strong>72 hours after the box is live</strong>.
     </p>
-    <p>
-      Please ensure you follow all the steps to properly secure and document your work.
-      If you have any questions or need support, feel free to reach out after the specified timeframe.
-    </p>
-    <p><strong>Good luck and enjoy the challenge!</strong></p>
   </div>
 </body>
 </html>
