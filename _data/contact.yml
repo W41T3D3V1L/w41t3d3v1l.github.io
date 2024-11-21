@@ -7,8 +7,8 @@
   icon: "fa-brands fa-x-twitter"
   # Add TryHackMe Contact Option
 - type: tryhackme
-  icon: "/assets/img/thm-icon.png"
-  url:  '/assets/img/thm-icon.png'    
+  icon: "https://tryhackme.com/img/favicon.png"
+  url:  'https://tryhackme.com/r/p/0XC3L1KD'    
 
 #- type: email
 #  icon: "fas fa-envelope"
