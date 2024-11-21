@@ -21,5 +21,5 @@ def display_protected_file(file_path)
 end
 
 # Specify the file you want to protect
-file_path = "2024-01-05-tryhackme-dodge.md"
+file_path = "/posts/tryhackme-dodge/"
 display_protected_file(file_path)
