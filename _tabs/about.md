@@ -264,19 +264,24 @@ order: 4
   }
 
   button {
-    padding: 12px 24px;
+    padding: 12px 20px;
     font-size: 18px;
     border-radius: 8px;
-    background-color: #28a745;
+    background: linear-gradient(45deg, #ff6a00, #ee0979);
     color: white;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background 0.3s ease, transform 0.3s ease;
     margin-top: 10px;
   }
 
   button:hover {
-    background-color: #218838;
+    background: linear-gradient(45deg, #ee0979, #ff6a00);
+    transform: scale(1.05);
+  }
+
+  button:active {
+    transform: scale(1);
   }
 
   .message {
