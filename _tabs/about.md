@@ -243,6 +243,7 @@ order: 4
 </script>
 
 
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -377,20 +378,18 @@ order: 4
 
           if (playerPosition.x === x && playerPosition.y === y) {
             mazeCell.classList.add('maze-player');
+            // Show win message in the same cell
+            if (maze[playerPosition.y][playerPosition.x] === 'end') {
+              const message = document.createElement('div');
+              message.classList.add('maze-message');
+              message.textContent = '🥳 Maze Solved!';
+              mazeCell.appendChild(message);
+            }
           }
 
           mazeContainer.appendChild(mazeCell);
         });
       });
-
-      // If player reaches the end, hide the maze and show the win message
-      if (maze[playerPosition.y][playerPosition.x] === 'end') {
-        const message = document.createElement('div');
-        message.classList.add('maze-message');
-        message.textContent = '🥳 Maze Solved!';
-        mazeContainer.style.display = 'none';  // Hide the maze container
-        document.querySelector('.maze-outer-container').appendChild(message);
-      }
     }
 
     // Move the player inside the maze
@@ -410,10 +409,19 @@ order: 4
       renderMaze();
     }
 
+    // Event listeners for button controls
     document.getElementById('up').addEventListener('click', () => movePlayer('up'));
     document.getElementById('down').addEventListener('click', () => movePlayer('down'));
     document.getElementById('left').addEventListener('click', () => movePlayer('left'));
     document.getElementById('right').addEventListener('click', () => movePlayer('right'));
+
+    // Event listener for keyboard controls (WASD)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'w' || e.key === 'ArrowUp') movePlayer('up');
+      if (e.key === 'a' || e.key === 'ArrowLeft') movePlayer('left');
+      if (e.key === 's' || e.key === 'ArrowDown') movePlayer('down');
+      if (e.key === 'd' || e.key === 'ArrowRight') movePlayer('right');
+    });
 
     renderMaze();
   </script>
