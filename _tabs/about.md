@@ -241,3 +241,5 @@ order: 4
     window.open('https://tryhackme.com/p/0XC3L1KD', '_blank');
   });
 </script>
+
+<iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=500531" style='border:none;'></iframe>
