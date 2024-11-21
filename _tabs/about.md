@@ -38,7 +38,7 @@ order: 4
   </p>
 </div>
 
-<div id="thm-badge" role="button" tabindex="0" aria-label="user avatar" style="display:none;">
+<div id="thm-badge" role="button" tabindex="0" aria-label="user avatar">
   <div class="thm-avatar-outer">
     <div class="thm-avatar"></div>
   </div>
