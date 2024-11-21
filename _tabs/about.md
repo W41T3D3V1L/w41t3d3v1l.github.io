@@ -44,6 +44,7 @@ order: 4
   .highlight {
     background-color: #ffeb3b;
     padding: 0 5px;
+    color: red;
     border-radius: 3px;
   }
 
