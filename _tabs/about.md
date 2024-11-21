@@ -242,4 +242,168 @@ order: 4
   });
 </script>
 
-<iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=500531" style='border:none;'></iframe>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maze Game</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .maze-game-container {
+      text-align: center;
+    }
+
+    .maze {
+      display: grid;
+      grid-template-columns: repeat(4, 50px);
+      grid-template-rows: repeat(3, 50px);
+      gap: 5px;
+      margin-bottom: 20px;
+    }
+
+    .maze-cell {
+      width: 50px;
+      height: 50px;
+      border: 1px solid #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .maze-start {
+      background-color: green;
+    }
+
+    .maze-end {
+      background-color: red;
+    }
+
+    .maze-wall {
+      background-color: #555;
+    }
+
+    .maze-empty {
+      background-color: #fff;
+    }
+
+    .maze-controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .maze-move-btn {
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .maze-move-btn:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="maze-game-container">
+    <div class="maze">
+      <div class="maze-cell maze-start"></div>
+      <div class="maze-cell maze-wall"></div>
+      <div class="maze-cell maze-wall"></div>
+      <div class="maze-cell maze-wall"></div>
+      <div class="maze-cell maze-empty"></div>
+      <div class="maze-cell maze-wall"></div>
+      <div class="maze-cell maze-wall"></div>
+      <div class="maze-cell maze-wall"></div>
+      <div class="maze-cell maze-empty"></div>
+      <div class="maze-cell maze-wall"></div>
+      <div class="maze-cell maze-end"></div>
+    </div>
+    <div class="maze-controls">
+      <button class="maze-move-btn" id="up">Up</button>
+      <button class="maze-move-btn" id="down">Down</button>
+      <button class="maze-move-btn" id="left">Left</button>
+      <button class="maze-move-btn" id="right">Right</button>
+    </div>
+  </div>
+
+  <script>
+    const maze = [
+      ['start', 'wall', 'wall', 'wall'],
+      ['empty', 'wall', 'empty', 'empty'],
+      ['empty', 'wall', 'wall', 'end']
+    ];
+
+    let playerPosition = { x: 0, y: 0 };
+
+    function renderMaze() {
+      const mazeContainer = document.querySelector('.maze');
+      mazeContainer.innerHTML = '';
+
+      maze.forEach((row, y) => {
+        row.forEach((cell, x) => {
+          const mazeCell = document.createElement('div');
+          mazeCell.classList.add('maze-cell');
+          if (cell === 'start') mazeCell.classList.add('maze-start');
+          if (cell === 'wall') mazeCell.classList.add('maze-wall');
+          if (cell === 'empty') mazeCell.classList.add('maze-empty');
+          if (cell === 'end') mazeCell.classList.add('maze-end');
+
+          if (playerPosition.x === x && playerPosition.y === y) {
+            mazeCell.style.backgroundColor = 'blue'; // Player's position
+          }
+
+          mazeContainer.appendChild(mazeCell);
+        });
+      });
+    }
+
+    function movePlayer(direction) {
+      const { x, y } = playerPosition;
+      
+      if (direction === 'up' && y > 0 && maze[y - 1][x] !== 'wall') {
+        playerPosition.y--;
+      } else if (direction === 'down' && y < 2 && maze[y + 1][x] !== 'wall') {
+        playerPosition.y++;
+      } else if (direction === 'left' && x > 0 && maze[y][x - 1] !== 'wall') {
+        playerPosition.x--;
+      } else if (direction === 'right' && x < 3 && maze[y][x + 1] !== 'wall') {
+        playerPosition.x++;
+      }
+
+      renderMaze();
+      checkEndCondition();
+    }
+
+    function checkEndCondition() {
+      if (maze[playerPosition.y][playerPosition.x] === 'end') {
+        alert('You won the game!');
+      }
+    }
+
+    document.getElementById('up').addEventListener('click', () => movePlayer('up'));
+    document.getElementById('down').addEventListener('click', () => movePlayer('down'));
+    document.getElementById('left').addEventListener('click', () => movePlayer('left'));
+    document.getElementById('right').addEventListener('click', () => movePlayer('right'));
+
+    renderMaze();
+  </script>
+</body>
+</html>
