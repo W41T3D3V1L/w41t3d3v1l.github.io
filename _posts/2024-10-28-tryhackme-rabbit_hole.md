@@ -1,7 +1,7 @@
 ---
 title: "TryHackMe: Rabbit Hole"
 author: c3l1kd
-categories: [HackTheBox]
+categories: [TryHackMe]
 tags: [web, sql injection, mysql, python]
 render_with_liquid: false
 img_path: /images/tryhackme_rabbit_hole/
