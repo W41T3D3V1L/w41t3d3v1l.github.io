@@ -1,7 +1,7 @@
 ---
 title: 'TryHackMe: test'
 author: c3l1kd
-categories: [TryHackMe]
+categories: [hackthebox]
 tags: [web, vhost, subdomain, ufw, firewall, ftp, sudo, apt]
 render_with_liquid: false
 img_path: /images/tryhackme_dodge/
