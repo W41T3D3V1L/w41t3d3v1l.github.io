@@ -67,7 +67,6 @@ With a nmap scan, there are three ports open:
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       max-width: 600px;
       text-align: center;
-      background-color: #fff;
     }
     .note-container h1 {
       margin-top: 0;
