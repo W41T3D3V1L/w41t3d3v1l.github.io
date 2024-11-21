@@ -249,7 +249,7 @@ order: 4
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maze Game</title>
   <style>
-
+   
 
     .maze-outer-container {
       text-align: center;
@@ -383,12 +383,13 @@ order: 4
         });
       });
 
-      // If player reaches the end, show a win message
+      // If player reaches the end, hide the maze and show the win message
       if (maze[playerPosition.y][playerPosition.x] === 'end') {
         const message = document.createElement('div');
         message.classList.add('maze-message');
         message.textContent = '🥳 Maze Solved!';
-        mazeContainer.appendChild(message);
+        mazeContainer.style.display = 'none';  // Hide the maze container
+        document.querySelector('.maze-outer-container').appendChild(message);
       }
     }
 
