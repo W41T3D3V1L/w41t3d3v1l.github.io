@@ -19,7 +19,27 @@ order: 4
     rel="stylesheet"
   />
 </head>
-<div id="thm-badge" role="button" tabindex="0" aria-label="user avatar">
+
+<div id="puzzle-container">
+  <h1>Welcome to the Puzzle Game!</h1>
+  <p>Guess the secret number to unlock the bio.</p>
+  <input type="number" id="guess" placeholder="Enter a number between 1 and 10">
+  <button onclick="checkGuess()">Submit Guess</button>
+  <p class="message" id="message"></p>
+</div>
+
+<div id="bio-container" style="display:none;">
+  <p>
+    My name is <span class="highlight">c3l1kd</span>, and I am a <span class="highlight">full-stack web developer</span> 
+    and a passionate <span class="highlight">pentester</span>. <span class="highlight">Hacking is my true passion</span>, 
+    and through this site, you'll find all my <span class="highlight">TryHackMe (THM)</span> and 
+    <span class="highlight">Hack The Box (HTB) write-ups</span>. I combine my skills in <span class="highlight">web development</span> 
+    with <span class="highlight">security expertise</span> to explore and solve challenges in the world of cybersecurity. 
+    I hope you enjoy exploring my projects!
+  </p>
+</div>
+
+<div id="thm-badge" role="button" tabindex="0" aria-label="user avatar" style="display:none;">
   <div class="thm-avatar-outer">
     <div class="thm-avatar"></div>
   </div>
@@ -227,15 +247,10 @@ order: 4
     text-decoration: underline;
   }
 
-  #puzzle-container {
-    text-align: center;
-    margin-top: 50px;
-  }
-
-  #bio-container {
-    display: none;
-    text-align: center;
-    margin-top: 50px;
+  .highlight {
+    background-color: #ffeb3b;
+    padding: 0 5px;
+    border-radius: 3px;
   }
 
   input[type="number"] {
@@ -252,7 +267,7 @@ order: 4
     border: none;
     background-color: #28a745;
     color: white;
-    border-radius: 4px;
+    cursor: pointer;
   }
 
   button:hover {
@@ -261,27 +276,10 @@ order: 4
 
   .message {
     font-size: 18px;
-    margin-top: 20px;
+    margin-top: 10px;
+    font-weight: bold;
   }
 </style>
-
-<div id="puzzle-container">
-  <h1>Welcome to the Puzzle Game!</h1>
-  <p>Guess the secret number to unlock the bio.</p>
-  <input type="number" id="guess" placeholder="Enter a number between 1 and 10">
-  <button onclick="checkGuess()">Submit Guess</button>
-  <p class="message" id="message"></p>
-</div>
-
-<div id="bio-container">
-  <p>
-    My name is c3l1kd, and I am a <code>full-stack web developer</code> and a passionate <code>pentester</code>. 
-    <code>Hacking is my true passion</code>, and through this site, you'll find all my <code>TryHackMe (THM)</code> 
-    and <code>Hack The Box (HTB) write-ups</code>. I combine my skills in <code>web development</code> with 
-    <code>security expertise</code> to explore and solve challenges in the world of cybersecurity. I hope you enjoy 
-    exploring my projects!
-  </p>
-</div>
 
 <script>
   const correctNumber = 7; // Set the correct number
@@ -289,6 +287,7 @@ order: 4
   const messageElement = document.getElementById("message");
   const bioContainer = document.getElementById("bio-container");
   const puzzleContainer = document.getElementById("puzzle-container");
+  const thmBadge = document.getElementById("thm-badge");
 
   function checkGuess() {
     const userGuess = parseInt(guessInput.value);
@@ -296,6 +295,7 @@ order: 4
       messageElement.textContent = "Correct! Here's my bio:";
       puzzleContainer.style.display = "none";
       bioContainer.style.display = "block";
+      thmBadge.style.display = "block";
     } else {
       messageElement.textContent = "Incorrect. Try again!";
     }
