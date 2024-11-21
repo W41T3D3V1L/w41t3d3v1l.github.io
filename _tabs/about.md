@@ -14,30 +14,30 @@ document.getElementById('matrix').appendChild(canvas);
 
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.height = 300; // Adjust height of the matrix effect area
 
-const letters = Array(256).fill('1');
-const fontSize = 14;
+const columns = canvas.width / 15; // Width of each column
+const letters = Array.from("celikd".repeat(columns)); // Letters to "rain"
+const drops = Array(columns).fill(1);
 
 function drawMatrix() {
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Fades the trails
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = '#0F0';
-  ctx.font = `${fontSize}px monospace`;
+  ctx.fillStyle = '#0F0'; // Lime green text
+  ctx.font = '15px monospace';
 
-  letters.forEach((letter, index) => {
-    const x = index * fontSize;
-    const y = (Math.random() * canvas.height) / fontSize;
+  for (let i = 0; i < drops.length; i++) {
+    const text = letters[Math.floor(Math.random() * letters.length)];
+    ctx.fillText(text, i * 15, drops[i] * 15);
 
-    ctx.fillText(letter, x, y * fontSize);
-
-    if (y * fontSize > canvas.height && Math.random() > 0.975) {
-      letters[index] = 0;
+    if (drops[i] * 15 > canvas.height && Math.random() > 0.95) {
+      drops[i] = 0; // Reset drop to top
     }
-  });
-
+    drops[i]++;
+  }
   requestAnimationFrame(drawMatrix);
 }
+
 drawMatrix();
 </script>
