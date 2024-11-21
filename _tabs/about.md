@@ -242,9 +242,27 @@ order: 4
   });
 </script>
 
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #f4f4f4;
+      padding: 0.2em 0.4em;
+      border-radius: 4px;
+      color: #d14;
+    }
+  </style>
+</head>
+<body>
   <p>
     My name is celikd, and I am a <code>full-stack web developer</code> and a passionate <code>pentester</code>. 
     <code>Hacking is my true passion</code>, and through this site, you'll find all my <code>TryHackMe (THM)</code> 
     and <code>Hack The Box (HTB) write-ups</code>. I combine my skills in <code>web development</code> with 
     <code>security expertise</code> to explore and solve challenges in the world of <code>cybersecurity</code>.
   </p>
+</body>
+</html>
