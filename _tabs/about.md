@@ -243,13 +243,23 @@ order: 4
 </script>
 
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maze Game</title>
   <style>
-  
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
 
     .maze-outer-container {
       text-align: center;
@@ -261,6 +271,7 @@ order: 4
       grid-template-rows: repeat(5, 50px);
       gap: 5px;
       margin-bottom: 20px;
+      position: relative;
     }
 
     .maze-cell {
@@ -290,6 +301,17 @@ order: 4
 
     .maze-player {
       background-color: blue;
+    }
+
+    .maze-message {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background-color: yellow;
+      font-size: 20px;
+      font-weight: bold;
     }
 
     .maze-controls {
@@ -325,19 +347,33 @@ order: 4
   </div>
 
   <script>
-    const maze = [
-      ['start', 'empty', 'wall', 'empty', 'end'],
-      ['empty', 'wall', 'wall', 'wall', 'empty'],
-      ['empty', 'empty', 'empty', 'empty', 'empty'],
-      ['wall', 'wall', 'empty', 'wall', 'empty'],
-      ['empty', 'empty', 'empty', 'empty', 'empty'],
-    ];
+    // Randomly generates the maze layout
+    function generateRandomMaze() {
+      const maze = Array(5).fill(null).map(() => Array(5).fill('empty'));
 
+      // Create some walls
+      for (let i = 0; i < 5; i++) {
+        const randomWallRow = Math.floor(Math.random() * 5);
+        const randomWallCol = Math.floor(Math.random() * 5);
+        maze[randomWallRow][randomWallCol] = 'wall';
+      }
+
+      // Ensure start and end points are not walls
+      maze[0][0] = 'start';
+      maze[4][4] = 'end';
+      
+      return maze;
+    }
+
+    const maze = generateRandomMaze();
     let playerPosition = { x: 0, y: 0 };
 
+    // Render the maze inside the container
     function renderMaze() {
       const mazeContainer = document.querySelector('.maze-container');
       mazeContainer.innerHTML = '';
+      const messageDiv = document.querySelector('.maze-message');
+      if (messageDiv) messageDiv.remove(); // Remove any previous message
 
       maze.forEach((row, y) => {
         row.forEach((cell, x) => {
@@ -356,11 +392,20 @@ order: 4
           mazeContainer.appendChild(mazeCell);
         });
       });
+
+      // If player reaches the end, show a win message
+      if (maze[playerPosition.y][playerPosition.x] === 'end') {
+        const message = document.createElement('div');
+        message.classList.add('maze-message');
+        message.textContent = '🥳 Maze Solved!';
+        mazeContainer.appendChild(message);
+      }
     }
 
+    // Move the player inside the maze
     function movePlayer(direction) {
       const { x, y } = playerPosition;
-      
+
       if (direction === 'up' && y > 0 && maze[y - 1][x] !== 'wall') {
         playerPosition.y--;
       } else if (direction === 'down' && y < 4 && maze[y + 1][x] !== 'wall') {
@@ -372,13 +417,6 @@ order: 4
       }
 
       renderMaze();
-      checkEndCondition();
-    }
-
-    function checkEndCondition() {
-      if (maze[playerPosition.y][playerPosition.x] === 'end') {
-        alert('You won the game!');
-      }
     }
 
     document.getElementById('up').addEventListener('click', () => movePlayer('up'));
