@@ -30,6 +30,8 @@ github:
 
 twitter:
   username: c3l1kd # change to your twitter username
+tryhackme:
+  username: c3l1kd # change to your twitter username
 
 social:
   # Change to your full name.
@@ -40,9 +42,11 @@ social:
     # The first element serves as the copyright owner's link
     - https://twitter.com/c3l1kd # change to your twitter homepage
     - https://github.com/W41T3D3V1L # change to your github homepage
+    - https://tryhackme.com/p/c3l1kd # change to your TryHackMe profile link
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
+    
 
 google_site_verification: f1ujY27xMTyDEYgpcRx1iCjHRPC7dWFhy09ZdChpF-Y # fill in to your verification string
 
