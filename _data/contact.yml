@@ -8,7 +8,7 @@
   # Add TryHackMe Contact Option
 - type: envelope
   icon: "fa-solid fa-envelope"
-  url:  'celikd@xmpp.is'    
+  url:  'mailto:celikd@xmpp.is'    
 
 #- type: email
 #  icon: "fas fa-envelope"
