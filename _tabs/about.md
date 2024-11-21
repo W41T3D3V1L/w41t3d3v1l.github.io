@@ -243,7 +243,6 @@ order: 4
 </script>
 
 
-
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -309,6 +308,7 @@ order: 4
       display: flex;
       justify-content: center;
       gap: 10px;
+      margin-top: 20px;
     }
 
     .maze-move-btn {
@@ -322,6 +322,10 @@ order: 4
     .maze-move-btn:hover {
       background-color: #218838;
     }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -329,7 +333,7 @@ order: 4
     <div class="maze-container">
       <!-- This is where the maze will be rendered dynamically -->
     </div>
-    <div class="maze-controls">
+    <div class="maze-controls hidden">
       <button class="maze-move-btn" id="up">Up</button>
       <button class="maze-move-btn" id="left">Left</button>
       <button class="maze-move-btn" id="right">Right</button>
@@ -384,6 +388,8 @@ order: 4
               message.classList.add('maze-message');
               message.textContent = '🥳 Maze Solved!';
               mazeCell.appendChild(message);
+              document.querySelector('.maze-controls').classList.add('hidden'); // Hide controls
+              mazeContainer.style.display = 'none';  // Hide the maze container
             }
           }
 
