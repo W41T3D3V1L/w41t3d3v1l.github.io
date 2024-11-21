@@ -29,7 +29,7 @@ order: 4
 
 <div id="bio-container" style="display:none;">
   <p>
-    My name is <span class="highlight">c3l1kd</span>, and I am a <span class="highlight">full-stack web developer</span> 
+    </span>, and I am a <span class="highlight">full-stack web developer</span> 
     and a passionate <span class="highlight">pentester</span>. <span class="highlight">Hacking is my true passion</span>, 
     and through this site, you'll find all my <span class="highlight">TryHackMe (THM)</span> and 
     <span class="highlight">Hack The Box (HTB) write-ups</span>. I combine my skills in <span class="highlight">web development</span> 
