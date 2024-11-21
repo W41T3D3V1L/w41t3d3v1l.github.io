@@ -21,7 +21,6 @@ order: 4
 </head>
 
 <div id="puzzle-container">
-  <h1>Welcome to the Puzzle Game!</h1>
   <p>Guess the secret number to unlock the bio.</p>
   <input type="number" id="guess" placeholder="Enter a number between 1 and 10">
   <button onclick="checkGuess()">Submit Guess</button>
