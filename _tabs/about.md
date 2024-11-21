@@ -250,7 +250,6 @@ order: 4
   <style>
     code {
       font-family: 'Courier New', Courier, monospace;
-      background-color: #f4f4f4;
       padding: 0.2em 0.4em;
       border-radius: 4px;
       color: #d14;
