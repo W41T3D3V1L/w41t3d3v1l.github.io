@@ -73,6 +73,7 @@ order: 4
 </div>
 
 <style>
+ 
   #thm-badge {
     width: 327px;
     height: 84px;
@@ -245,7 +246,6 @@ order: 4
   .thm-link:hover {
     text-decoration: underline;
   }
-
   .highlight {
     background-color: #ffeb3b;
     padding: 0 5px;
