@@ -34,4 +34,4 @@ code:hover {
 }
 </style>
 
-[![Tryhackme Room Link](room_card.image){: width="300" height="300" .shadow}](https://tryhackme.com/r/room/mousetrap){: .center }
+[![Tryhackme Room Link](room_image.png){: width="300" height="300" .shadow}](https://tryhackme.com/r/room/mousetrap){: .center }
