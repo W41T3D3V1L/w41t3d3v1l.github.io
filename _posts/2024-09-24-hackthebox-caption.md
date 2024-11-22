@@ -272,15 +272,18 @@ By opening the url path with port number `8080` that is an `Gitbucker` and also 
 ![Discovering Port 8080](04.png){: width="1200" height="800" }
 
 Now Enumeration for the machine
-I have searched for the repositories for the further use of it.
+
+I have searched for the repositories for the further use of it:
 
 - **Logservice**
 - **Caption-Portal**
 
+## Revealing some of the credentials
 Next step was giving an try into those the repositories and checking their particular activities for any sensitive information that can be found
-Revealing some of the credentials vis Git History which is present in the interface
 
+Revealing some of the `credentials` vis `Git History` which is present in the interface
 
+![Discovering Port 8080](05.png){: width="1200" height="800" }
 <html lang="en">
 <head>
   <meta charset="UTF-8">
