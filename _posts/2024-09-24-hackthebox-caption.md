@@ -242,7 +242,7 @@ There are five open ports:
 
 Now lets add Hostname to the `/etc/hosts` file.
 ## /etc/hosts
-```caption
+```console
 $ cat /etc/hosts
 127.0.0.1   localhost
 127.0.1.1   kali       kali
