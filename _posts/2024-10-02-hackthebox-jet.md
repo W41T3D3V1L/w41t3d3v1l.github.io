@@ -39,3 +39,25 @@ image:
 </style>
 
 [![Hackthebox Room Link](room_banner.png)](https://app.hackthebox.com/fortresses/1)
+## Initial Enumeration
+
+### Nmap Scan
+
+```console
+$ nmap 10.13.37.10
+Nmap scan report for 
+PORT     STATE SERVICE  
+22/tcp   open  ssh
+53/tcp   open  domain
+80/tcp   open  http
+5555/tcp open  freeciv
+7777/tcp open  cbt
+```
+
+There are five open ports:
+
+- **22** (SSH)
+- **53/tcp**  (domain)
+- **80/tcp**  (http)
+- **5555/tcp**   (freeciv)
+- **7777/tcp**   (cbt)
