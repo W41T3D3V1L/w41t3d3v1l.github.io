@@ -205,7 +205,8 @@ By intercepting the request with burpsuite we can see how the data is processed
 
 Let’s go with the easy way, we start by saving the request in a filerequest
 
-```request
+```console
+
 $ cat request
 POST /dirb_safe_dir_rf9EmcEIx/admin/dologin.php HTTP/1.1  
 Host: www.securewebinc.jet
