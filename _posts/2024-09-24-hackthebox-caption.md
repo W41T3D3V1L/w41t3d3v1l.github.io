@@ -255,11 +255,8 @@ $ cat /etc/hosts
 
 ## Discovering Port 80
 I have a open port in the nmap that is port number `80` by enumerating this we can find any further information for further use
-
-![Discovering Port 80](02.png){: width="1200" height="800" }
-
 `http://caption.htb`
-
+![Discovering Port 80](02.png){: width="1200" height="800" }
 by using the port number of `80` an interface has opened which displays an the some login forms and the URL shows as `http://caption.htb` , so I have tested some of the `default credentials` as the
 
 username : `admin / root`
@@ -276,8 +273,10 @@ By opening the url path with port number `8080` that is an `Gitbucker` and also 
 
 Now Enumeration for the machine
 I have searched for the repositories for the further use of it.
+
 - **Logservice**
 - **Caption-Portal**
+
 Next step was giving an try into those the repositories and checking their particular activities for any sensitive information that can be found
 Revealing some of the credentials vis Git History which is present in the interface
 
