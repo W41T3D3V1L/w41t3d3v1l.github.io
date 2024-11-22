@@ -72,26 +72,46 @@ There are five open ports:
 
   <style>
     .note-container {
-      border: 2px solid #4CAF50;
+      border: 2px solid #28a745;
       font-family: Arial, sans-serif;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      max-width: 600px;
+      border-radius: 15px;
+      padding: 20px 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+      color: #28a745;
       text-align: center;
-      margin: 0 auto; /* Center horizontally */
+      max-width: 600px;
+      width: 100%;
+      margin: 20px auto; /* Centers and adds space between elements */
     }
+
+    .note-container h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
     .note-containers {
-      margin-top: 20px; /* Space below the .note-container */
       max-width: 600px;
-      text-align: center;
-      color: white;
-      font-size: 1.1rem;
-      line-height: 1.6;
-      background-color: #4CAF50; /* Background color for better visibility */
-      border-radius: 10px;
+      width: 100%;
       padding: 20px;
-      margin: 0 auto; /* Center horizontally */
+      background-color: #28a745;
+      color: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin: 0 auto; /* Ensures the second container is centered */
+    }
+
+    .note-containers p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .note-containers strong {
+      font-weight: bold;
+      font-size: 1.3rem;
+      color: #ffdd57;
     }
   </style>
 </head>
@@ -101,7 +121,7 @@ There are five open ports:
   </div>
   <div class="note-containers">
     <p>
-      This writeup will be released <strong>soon!</strong>.
+      This writeup will be released <strong>soon!</strong>
     </p>
   </div>
 </body>
