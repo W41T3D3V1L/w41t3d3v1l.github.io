@@ -27,7 +27,7 @@ image:
   path: room_image.png
 ---
 
-**Jet [Fortress]** In this lab, you'll embark on a journey to uncover hidden secrets and vulnerabilities through various stages. Start by establishing a <code>Connection</code> to the target system, then dive into <code>Digging in...</code> where reconnaissance reveals essential clues. Progress <code>Going Deeper</code> to identify weaknesses, followed by <code>Bypassing Authentication</code> to infiltrate the system. Execute commands in the <code>Command</code> section while managing an <code>Overflown</code> buffer. Discover a <code>Secret Message</code> hidden within the system, explore <code>Elasticity</code> by interacting with flexible resources, and analyze the <code>Member Manager</code> to find more openings. Finally, uncover <code>More Secrets</code> and a <code>Memo</code> that wraps up the challenges, completing your hacker's adventure.
+**Jet [Fortress]**In this lab, you will explore various security challenges. First, you'll <code>Connect</code> to the environment and get started. As you progress, begin <code>Digging in</code> to uncover hidden information. Move <code>Going Deeper</code> to analyze and bypass authentication mechanisms. You'll learn how to handle **<code>Command</code> execution vulnerabilities and buffer <code>Overflown</code> exploits. There’s also a hidden <code>Secret Message</code> that requires careful extraction. Understand the concept of <code>Elasticity</code> in environments, and manage users with the <code>Member Manager</code> feature. Lastly, uncover <code>More Secrets</code> in the system and decode the final <code>Memo</code>.
 
 <style>
     code {
