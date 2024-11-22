@@ -136,7 +136,7 @@ $ echo "10.13.37.10 www.securewebinc.jet" | sudo tee -a /etc/hosts
 By visiting the web this time from dominio the bottom we can again `flag`
 
 
-![Second Flag](02.png){: width="1200" height="800" }
+![Second Flag](02.jpeg){: width="1200" height="800" }
 
 ## Going Deeper
 In the `codigo` page source we can see that it loads 2 files with extension `js` , one is the template and the other has a rather interesting name: `secure.js`
