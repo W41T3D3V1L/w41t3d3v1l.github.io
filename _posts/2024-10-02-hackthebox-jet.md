@@ -63,43 +63,11 @@ There are five open ports:
 - **7777/tcp**   (cbt)
 
 
+## First Flag
+
+If we look at the website we can see a default page and also the `flag`.
+
+![First Flag](01.png){: width="1200" height="800" }
 
 
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    .note-containers {
-      max-width: 600px;
-      width: 100%;
-      padding: 20px;
-      background-color: #28a745;
-      color: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      margin: 0 auto; /* Ensures the second container is centered */
-    }
-
-    .note-containers p {
-      font-size: 1.2rem;
-      line-height: 1.6;
-    }
-
-    .note-containers strong {
-      font-weight: bold;
-      font-size: 1.3rem;
-      color: #ffdd57;
-    }
-  </style>
-</head>
-<body>
-  <div class="note-containers">
-    <p>
-      This writeup will be released <strong>soon!</strong>
-    </p>
-  </div>
-</body>
-</html>
