@@ -74,25 +74,24 @@ There are five open ports:
     .note-container {
       border: 2px solid #4CAF50;
       font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       border-radius: 10px;
       padding: 20px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       max-width: 600px;
       text-align: center;
-      margin-bottom: 20px; /* Add margin to separate the elements */
+      margin: 0 auto; /* Center horizontally */
     }
     .note-containers {
+      margin-top: 20px; /* Space below the .note-container */
       max-width: 600px;
       text-align: center;
       color: white;
       font-size: 1.1rem;
       line-height: 1.6;
-      background-color: #4CAF50; /* Added background color for visibility */
+      background-color: #4CAF50; /* Background color for better visibility */
       border-radius: 10px;
       padding: 20px;
+      margin: 0 auto; /* Center horizontally */
     }
   </style>
 </head>
