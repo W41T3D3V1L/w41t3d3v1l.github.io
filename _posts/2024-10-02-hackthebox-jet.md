@@ -160,7 +160,7 @@ $ console.log(String.fromCharCode(102,117,110,99,116,105,111,110,32,103,101,116,
 ```
 When we run it we can see that it makes a request to stats.php a directory which ruta would have been impossible to obtain by applying brute force.
 
-```console secure.js
+```console
 function getStats()
 {
     $.ajax({url: "/dirb_safe_dir_rf9EmcEIx/admin/stats.php",  
@@ -225,7 +225,7 @@ username=admin&password=admin
 
 We can use it `sqlmap` by passing it `-r` the request file and with the parameter `-dbs` we list the databases, we can find the dbjet `admin`
 
-```sqlmap console
+```console
 $ sqlmap -r request --batch -dbs
         ___
        __H__
