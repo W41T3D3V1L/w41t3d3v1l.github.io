@@ -88,7 +88,7 @@ There are five open ports:
       margin-top: 0;
       color: #4CAF50;
     }
-    .note-container p {
+    .note-containers p {
       font-size: 1.1rem;
       line-height: 1.6;
       color: white;
@@ -97,8 +97,11 @@ There are five open ports:
 </head>
 <body>
   <div class="note-container">
-    <h1>Important Note</h1></br>
-    <p>
+    <h1>Important Note</h1>
+    
+  </div>
+  <div class="note-containers">
+  <p  >
       This writeup will be released <strong>soon!</strong>.
     </p>
   </div>
