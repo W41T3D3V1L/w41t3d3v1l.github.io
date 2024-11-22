@@ -97,7 +97,7 @@ There are five open ports:
 </head>
 <body>
   <div class="note-container">
-    <h1>Important Note</h1>
+    <h1>Important Note</h1></br>
     <p>
       This writeup will be released <strong>soon!</strong>.
     </p>
