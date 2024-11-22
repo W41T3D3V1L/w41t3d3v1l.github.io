@@ -61,3 +61,46 @@ There are five open ports:
 - **80/tcp**  (http)
 - **5555/tcp**   (freeciv)
 - **7777/tcp**   (cbt)
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    .note-container {
+      border: 2px solid #4CAF50;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      text-align: center;
+      
+    }
+    .note-container h1 {
+      margin-top: 0;
+      color: #4CAF50;
+    }
+    .note-container p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="note-container">
+    <h1>Important Note</h1>
+    <p>
+      This writeup will be released <strong>soon!</strong>.
+    </p>
+  </div>
+</body>
+</html>
