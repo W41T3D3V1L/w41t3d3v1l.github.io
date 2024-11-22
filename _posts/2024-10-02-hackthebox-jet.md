@@ -17,8 +17,7 @@ image:
   font-family: 'Courier New', Courier, monospace;
   font-size: 1rem;
   color: #1d3557; /* Dark blue color */
-  background-color: #f1faee; /* Light greenish-blue background */
-  padding: 2px 5px;
+  padding: 1px 3px;
   border-radius: 4px;
   border: 1px solid #a8dadc;
   display: inline-block;
