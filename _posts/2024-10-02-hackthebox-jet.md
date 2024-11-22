@@ -33,6 +33,6 @@ code:hover {
 }
 </style>
 
-[![Tryhackme Room Link](room_banner.png)](https://app.hackthebox.com/fortresses/1)
+[![Hackthebox Room Link](room_banner.png)](https://app.hackthebox.com/fortresses/1)
 
 
