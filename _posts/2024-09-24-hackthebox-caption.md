@@ -17,7 +17,7 @@ img_path: /images/hackthebox_caption/
 image:
   path: room_image.png
 ---
-**Caption**on HackTheBox is a <code class="highlight">Windows</code> machine challenge that tests <code class="highlight">cybersecurity skills</code> by requiring users to exploit <code class="highlight">web server vulnerabilities</code>, gain a <code class="highlight">reverse shell</code>, escalate <code class="highlight">privileges</code>, and capture <code class="highlight">user</code> and <code class="highlight">root flags</code>. Participants must use tools like <code class="highlight">Nmap</code> and <code class="highlight">wfuzz</code> for <code class="highlight">reconnaissance</code>, analyze services such as <code class="highlight">SVN</code>, and apply <code class="highlight">enumeration techniques</code> to uncover hidden <code class="highlight">directories</code> and <code class="highlight">credentials</code>. By leveraging <code class="highlight">web vulnerabilities</code> and <code class="highlight">reverse shell techniques</code>, users navigate through the challenge, enhancing their understanding of <code class="highlight">cybersecurity concepts</code> while documenting their learning process.
+**Caption** on HackTheBox is a <code class="highlight">Windows</code> machine challenge that tests <code class="highlight">cybersecurity skills</code> by requiring users to exploit <code class="highlight">web server vulnerabilities</code>, gain a <code class="highlight">reverse shell</code>, escalate <code class="highlight">privileges</code>, and capture <code class="highlight">user</code> and <code class="highlight">root flags</code>. Participants must use tools like <code class="highlight">Nmap</code> and <code class="highlight">wfuzz</code> for <code class="highlight">reconnaissance</code>, analyze services such as <code class="highlight">SVN</code>, and apply <code class="highlight">enumeration techniques</code> to uncover hidden <code class="highlight">directories</code> and <code class="highlight">credentials</code>. By leveraging <code class="highlight">web vulnerabilities</code> and <code class="highlight">reverse shell techniques</code>, users navigate through the challenge, enhancing their understanding of <code class="highlight">cybersecurity concepts</code> while documenting their learning process.
 <style>
     .highlight {
  background-color: #ffeb3b;
@@ -251,6 +251,35 @@ $ cat /etc/hosts
 ...
 ```
 ![/etc/hosts](01.png){: width="1200" height="800" }
+
+
+## Discovering Port 80
+I have a open port in the nmap that is port number `80` by enumerating this we can find any further information for further use
+
+![Discovering Port 80](02.png){: width="1200" height="800" }
+
+`http://caption.htb`
+
+by using the port number of `80` an interface has opened which displays an the some login forms and the URL shows as `http://caption.htb` , so I have tested some of the `default credentials` as the
+
+username : `admin / root`
+
+password : `admin / root`
+
+## Discovering Port 8080
+
+but didn't got any information by using the some `default credentials` and I have tried using the second port number `8080` `Gitbucket`
+![Discovering Port 8080](03.png){: width="1200" height="800" }
+
+By opening the url path with port number `8080` that is an `Gitbucker` and also tried some `default credentials` and it was successful.
+![Discovering Port 8080](04.png){: width="1200" height="800" }
+
+Now Enumeration for the machine
+I have searched for the repositories for the further use of it.
+- **Logservice**
+- **Caption-Portal**
+Next step was giving an try into those the repositories and checking their particular activities for any sensitive information that can be found
+Revealing some of the credentials vis Git History which is present in the interface
 
 
 <html lang="en">
