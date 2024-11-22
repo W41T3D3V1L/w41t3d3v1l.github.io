@@ -82,26 +82,26 @@ There are five open ports:
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       max-width: 600px;
       text-align: center;
-      
+      margin-bottom: 20px; /* Add margin to separate the elements */
     }
-    .note-container h1 {
-      margin-top: 0;
-      color: #4CAF50;
-    }
-    .note-containers p {
+    .note-containers {
+      max-width: 600px;
+      text-align: center;
+      color: white;
       font-size: 1.1rem;
       line-height: 1.6;
-      color: white;
+      background-color: #4CAF50; /* Added background color for visibility */
+      border-radius: 10px;
+      padding: 20px;
     }
   </style>
 </head>
 <body>
   <div class="note-container">
     <h1>Important Note</h1>
-    
   </div>
   <div class="note-containers">
-  <p  >
+    <p>
       This writeup will be released <strong>soon!</strong>.
     </p>
   </div>
