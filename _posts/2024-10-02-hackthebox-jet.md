@@ -27,7 +27,7 @@ image:
   path: room_image.png
 ---
 
-**Jet [Fortress]**In this lab, you will explore various security challenges. First, you'll <code>Connect</code> to the environment and get started. As you progress, begin <code class="highlight">Digging in</code> to uncover hidden information. Move <code>Going Deeper</code> to analyze and bypass authentication mechanisms. You'll learn how to handle **<code>Command</code> execution vulnerabilities and buffer <code>Overflown</code> exploits. There’s also a hidden <code>Secret Message</code> that requires careful extraction. Understand the concept of <code>Elasticity</code> in environments, and manage users with the <code>Member Manager</code> feature. Lastly, uncover <code>More Secrets</code> in the system and decode the final <code>Memo</code>.
+**Jet [Fortress]**In this lab, you will explore various security challenges. First, you'll <code class="highlight">Connect</code> to the environment and get started. As you progress, begin <code class="highlight">Digging in</code> to uncover hidden information. Move <code class="highlight">Going Deeper</code> to analyze and bypass authentication mechanisms. You'll learn how to handle **<code class="highlight">Command</code> execution vulnerabilities and buffer <code class="highlight">Overflown</code> exploits. There’s also a hidden <code class="highlight">Secret Message</code> that requires careful extraction. Understand the concept of <code class="highlight">Elasticity</code> in environments, and manage users with the <code class="highlight">Member Manager</code> feature. Lastly, uncover <code class="highlight">More Secrets</code> in the system and decode the final <code class="highlight">Memo</code>.
 
 <style>
     .highlight {
