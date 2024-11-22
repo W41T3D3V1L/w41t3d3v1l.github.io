@@ -82,7 +82,7 @@ There are five open ports:
       text-align: center;
       max-width: 600px;
       width: 100%;
-      margin: 20px auto; /* Centers and adds space between elements */
+      margin: 20px auto; 
     }
 
     .note-container h1 {
