@@ -71,26 +71,6 @@ There are five open ports:
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    .note-container {
-      border: 2px solid #28a745;
-      font-family: Arial, sans-serif;
-      border-radius: 15px;
-      padding: 20px 30px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      background-color: #ffffff;
-      color: #28a745;
-      text-align: center;
-      max-width: 600px;
-      width: 100%;
-      margin: 20px auto; 
-    }
-
-    .note-container h1 {
-      margin: 0;
-      font-size: 2rem;
-      font-weight: bold;
-    }
-
     .note-containers {
       max-width: 600px;
       width: 100%;
@@ -116,9 +96,6 @@ There are five open ports:
   </style>
 </head>
 <body>
-  <div class="note-container">
-    <h1>Important Note</h1>
-  </div>
   <div class="note-containers">
     <p>
       This writeup will be released <strong>soon!</strong>
