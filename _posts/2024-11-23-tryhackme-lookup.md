@@ -12,7 +12,7 @@ image:
 **Lookup** offers a treasure trove of learning opportunities for aspiring hackers. This intriguing machine showcases various real-world vulnerabilities, ranging from web application weaknesses to privilege escalation techniques. By exploring and exploiting these vulnerabilities, hackers can sharpen their skills and gain invaluable experience in ethical hacking. Through "`Lookup`," hackers can master the art of reconnaissance, scanning, and enumeration to uncover hidden services and subdomains. They will learn how to exploit web application vulnerabilities, such as command injection, and understand the significance of secure coding practices. The machine also challenges hackers to automate tasks, demonstrating the power of scripting in penetration testing.
 
 
-[![Tryhackme Room Link](room_image.png){: width="300" height="300" .shadow}](https://tryhackme.com/r/room/mousetrap){: .center }
+<!-- [![Tryhackme Room Link](room_image.png){: width="300" height="300" .shadow}](https://tryhackme.com/r/room/mousetrap){: .center } -->
 
 <html lang="en">
 <head>
