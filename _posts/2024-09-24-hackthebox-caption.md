@@ -315,7 +315,13 @@ as i have went through margo's files, I found something interesting — a privat
 
 ```console
 └─# ssh -i margo_key margo@caption.htb 
-Welcome to Ubuntu 22.04.4 LTS (GNU/Linux 5.15.0–119-generic x86_64) * Documentation: https://help.ubuntu.com * Management: https://landscape.canonical.com * Support: https://ubuntu.com/pro System information as of Mon Sep 27 6:33:10 PM UTC 2024 System load: 0.0 Processes: 233 Usage of /: 68.7% of 8.76GB Users logged in: 0 Memory usage: 17% IPv4 address for eth0: 10.129.46.159 Swap usage: 0%
+Welcome to Ubuntu 22.04.4 LTS (GNU/Linux 5.15.0–119-generic x86_64) 
+
+* Documentation: https://help.ubuntu.com 
+
+* Management: https://landscape.canonical.com
+
+* Support: https://ubuntu.com/pro System information as of Mon Sep 27 6:33:10 PM UTC 2024 System load: 0.0 Processes: 233 Usage of /: 68.7% of 8.76GB Users logged in: 0 Memory usage: 17% IPv4 address for eth0: 10.129.46.159 Swap usage: 0%
 ```
 After copying the key and setting the proper permissions, I was able to SSH into the machine as Margo.
 
@@ -333,7 +339,9 @@ One of the most interesting parts of this box was the Logservice repository. Aft
 
 First, I cloned the LogServicerepository:
 >git clone http://caption.htb:8080/git/root/Logservice.git
+
 >changing the directory to the logservice
+
 >cd Logservice
 
 Next, I generated the Python client code using the Thrift command:
