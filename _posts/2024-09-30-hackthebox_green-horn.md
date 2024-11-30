@@ -85,7 +85,7 @@ We have identified `4` ports using nmap,
 - **3000/HTTP**- (`open`)
 - **32783/UNKNOWN** - (`filtered`)
 
-**Web Server at Port 80**
+## Web Server at Port 80
 visiting the web server on port `80`, the server redirects us to `http://greenhorn.htb`, adding that to the `/etc/hosts`
 
 ```console
@@ -107,7 +107,7 @@ Looking through the web server nothing seems interesting, testing for LFI it doe
 
 ![/etc/hosts](02.png){: width="1200" height="800" }
 
-**Web Server at Port 3000**
+## Web Server at Port 3000
 
 As we reach a dead end on port 80, we decided to look at the port 3000 where we found a free-password Gitea repository which had the source code of the web application hosted on port 80 `GreenHorn`
 
@@ -129,8 +129,8 @@ Putting the password in `http://greenhorn.htb/login.php` we were able to `login`
 
 ![/etc/hosts](05.png){: width="1200" height="800" }
 
-**Exploitation**
-**Horizontal Escalation - user.txt**
+## Exploitation
+### Horizontal Escalation - user.txt
 It’s time for a reverse shell, we know that Pluck 4.7.18 is vulnerable to [RCE](https://www.exploit-db.com/exploits/51592), we can upload a malicious ZIP file that contains a PHP script that will establish a connection for us.
 
 ```console
@@ -191,7 +191,7 @@ junior@greenhorn:~$ ls
 ```
 Once we get access to junior we can read the `user.txt` file!
 
-**Vertical Escalation - root.txt**
+## Vertical Escalation - root.txt
 
 Inside the home directory of junior we can see that there is a PDF file `'Using OpenVAS.pdf'`, we transfer it to our local machine with nc
 
