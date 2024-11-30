@@ -338,15 +338,15 @@ Here I have done exploiting LogService
 One of the most interesting parts of this box was the Logservice repository. After cloning it from GitBucket, I saw that it contained a Thrift-based service. The key here was generating the Python client to interact with the LogService.
 
 First, I cloned the LogServicerepository:
->git clone http://caption.htb:8080/git/root/Logservice.git
+> `git clone http://caption.htb:8080/git/root/Logservice.git`
 
->changing the directory to the logservice
+changing the directory to the logservice
 
->cd Logservice
+> `cd Logservice`
 
 Next, I generated the Python client code using the Thrift command:
 
-`thrift --gen py log_service.thrift`
+> `thrift --gen py log_service.thrift`
 
 This generated the necessary Python client code to interact with the LogService.
 
