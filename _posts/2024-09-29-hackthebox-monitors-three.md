@@ -1,5 +1,5 @@
 ---
-title: "Hackthebox: Mountain-Three [Machine] [Season 6]"
+title: "Hackthebox: Monitors-Three [Machine] [Season 6]"
 author: c3l1kd
 categories: [Hackthebox]
 tags:
