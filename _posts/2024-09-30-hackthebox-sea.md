@@ -31,11 +31,13 @@ We have identified `2` ports using nmap,
 
 - **22/SSH** - (`open`)
 - **80/HTTP** - (`open`)
-I took whatweb a look, but I didn’t see the hostname. I browsed with a browser and saw [http://sea.htb/contact.php.]Add hostname to /etc/hosts:
+I took whatweb a look, but I didn’t see the hostname. I browsed with a browser and saw [`http://sea.htb/contact.php.`]Add hostname to `/etc/hosts`:
+
 ```console
 └──╼ [★]$ echo "10.10.11.28 sea.htb" | sudo tee -a /etc/hosts 
 10.10.11.28 sea.htb
 ```
+
 ## Let’s scan the path:
 
 ```console
