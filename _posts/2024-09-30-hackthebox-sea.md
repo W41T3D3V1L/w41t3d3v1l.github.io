@@ -418,6 +418,80 @@ cat /home/amay/user.txt
 After taking down the user…
 After shopping around for two times and still not thinking about how to elevate the rights, I refer to the answers on the Internet to take a look at the services currently available on this machine:
 
+```console
+amay@sea:~$ netstat -tulpn
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:45763         0.0.0.0:*               LISTEN      -
+tcp6       0      0 :::22                   :::*                    LISTEN      -
+udp        0      0 127.0.0.53:53           0.0.0.0:*                           -
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           -
+```
+
+You will find that it has other local services such as 8080 port. We can transfer the traffic to our 48763 port through the following method, and we can see what its web service looks like:
+
+```console
+└──╼ [★]$ ssh -L 48763:localhost:8080 amay@10.10.11.28
+The authenticity of host '10.10.11.28 (10.10.11.28)' can't be established.
+ED25519 key fingerprint is SHA256:xC5wFVdcixOCmr5pOw8Tm4AajGSMT3j5Q4wL6/ZQg7A.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.10.11.28' (ED25519) to the list of known hosts.
+amay@10.10.11.28's password: 
+Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.4.0-190-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+System information as of Thu 15 Aug 2024 08:29:06 AM UTC
+
+  System load:  0.42              Processes:             259
+  Usage of /:   73.9% of 6.51GB   Users logged in:       1
+  Memory usage: 22%               IPv4 address for eth0: 10.10.11.28
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your Internet connection or proxy settings
+
+.......
+amay@sea:~$
+```
+
+Go to our local browser and you will find that 48763 pops up a login page:
+
+![/etc/hosts](04.png){: width="1200" height="800" }
+
+Then we can log in by entering the only set of account passwords we currently know:
+
+![/etc/hosts](05.png){: width="1200" height="800" }
+
+After entering, you will see a system monitor page, click Analyze to see it The content of access.log is printed, so we try to read the content of `/root/root.txt` through burp:
+
+![/etc/hosts](06.png){: width="1200" height="800" }
+
+the response says there is no suspicious traffic, so it does not print.
+Because we saw in the access log that our previous ffuf command seemed to be regarded as a malicious command, so after random testing, I found that if the command was truncated and added, ffuf it would be judged as suspicious traffic:
+
+![/etc/hosts](07.png){: width="1200" height="800" }
+
+CONGRATS YOU GOT ROOT FLAG…
+
+![/etc/hosts](08.gif){: width="1200" height="800" }
 
 <html lang="en">
 <head>
