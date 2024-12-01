@@ -37,7 +37,9 @@ I took whatweb a look, but I didn’t see the hostname. I browsed with a browser
 10.10.11.28 sea.htb
 ```
 ## Let’s scan the path:
+
 ```console
+
 └──╼ [★]$ ffuf -u http://sea.htb/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
 
         /'___\  /'___\           /'___\       
@@ -82,7 +84,10 @@ plugins                 [Status: 301, Size: 231, Words: 14, Lines: 8, Duration: 
 messages                [Status: 301, Size: 232, Words: 14, Lines: 8, Duration: 92ms]
 404                     [Status: 200, Size: 3341, Words: 530, Lines: 85, Duration: 93ms]
 ```
+
+
 Find some paths that will redirect, and then scan down:
+
 
 ```console
 └──╼ [★]$ ffuf -u http://sea.htb/themes/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt 
@@ -114,7 +119,10 @@ video games             [Status: 403, Size: 199, Words: 14, Lines: 8, Duration: 
 spyware doctor          [Status: 403, Size: 199, Words: 14, Lines: 8, Duration: 92ms]
 4%20Color%2099%20IT2    [Status: 403, Size: 199, Words: 14, Lines: 8, Duration: 93ms]
 ```
+
 You will be redirected when you see bike, and then scan down to see:
+
+
 ```console
 └──╼ [★]$ ffuf -u http://sea.htb/themes/bike/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
 
@@ -165,6 +173,7 @@ spyware doctor          [Status: 403, Size: 199, Words: 14, Lines: 8, Duration: 
 4%20Color%2099%20IT2    [Status: 403, Size: 199, Words: 14, Lines: 8, Duration: 96ms]
 nero 7                  [Status: 403, Size: 199, Words: 14, Lines: 8, Duration: 93ms]
 cell phones             [Status: 403, Size: 199, Words: 14, Lines: 8, Duration: 93ms]
+
 ```
 If you have the information, try to visit summary and LICENSE and you will see:
 <html lang="en">
