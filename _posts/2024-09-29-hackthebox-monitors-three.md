@@ -426,6 +426,62 @@ So here are the steps we’ll be doing, to summerize.
 - URL-encode the outputted value and submit it as the password
 
 So, for the server-passphrase, we can find it in `/opt/duplicati/config/Duplicati-server.sqlite` , running sqlitebrowser on the sqlite file will get us what we need.
+
+
+![/etc/hosts](06.png){: width="1200" height="800" }
+
+Decypting the server passphrase using `CyberChef` will get as a value that we will save for later.
+
+Capturing the request sent to `http://localhost:8200/login.html`, trying to log in, with burpsuite.
+
+> ⚠️ Note: We need to intercept the response of the request in order to retrive to Nonce session value, right click on the request captured by BurpSuite > Do intercept > Response to this request.
+
+![/etc/hosts](07.png){: width="1200" height="800" }
+
+Now we get our Nonce session value that we need to craft the noncedpwd variable.
+
+![/etc/hosts](08.png){: width="1200" height="800" }
+
+Once the 2 values are in our hands, we start crafting our variable.
+
+
+```console
+var noncedpwd = CryptoJS.SHA256(CryptoJS.enc.Hex.parse(CryptoJS.enc.Base64.parse(data.Nonce) + saltedpwd)).toString(CryptoJS.enc.Base64);
+```
+
+We need to modify `2` variables in the payload :
+- **data.Nonce** : Which is the Nonce we intercepted with burp.
+- **saltedpwd** : The hex value we got from Cyberchef.
+
+Intercepting the login attempt, getting the Nonce value from the response, crafting the variable, submiting it into the console, getting the value, replacing it in the request and URL-encoding it will get us in!
+
+> Important Note: All the steps listed above need to be done within the same request as the Nonce session value changes whenever we submit a password to login!
+
+![/etc/hosts](09.png){: width="1200" height="800" }
+
+Once in, we start looking for a way to get shell as root, as Duplicati is a backup web app run by root we could backup our ssh public key and then restore that backup into /root/.ssh as an example and this way we could access the root account through SSH so easily.
+So we start by creating a backup (Add backup), setting up a name for the backup and disabling encryption as it won’t be needed, for the Destination, as we said, it will be the root .ssh folder so it will be /source/root/.ssh/ as everyting is under source, moving to Source Data we need to make sure that we create an authorized_keys on the box using marcus account, we make it under `/home/marcus/authorized_keys` so in the Source Data it will be `/source/home/marcus/authorized_keys` we make sure to add the path and click on next, next again and save!
+
+Once all the steps are done and our backup is set, we refresh the page in order to see the created backup.
+
+![/etc/hosts](10.png){: width="1200" height="800" }
+
+We now need to click on the arrow next to our created backup and click on Run now to make the backup. Once done, we need to head to Restore in order to restore the backup files and we need to restore from the backup we just created, for instance, ssh. Selecting ssh and clicking on next we need to select our file that will be restored `(authorized_keys)` and hit on continue, we now need to pick our location as it will be set as `/source/root/.ssh/` as we said earlier and we hit restore!
+Now we should be able to login to the root account and retrieve our root.txt file.
+
+```console
+┌──(kali㉿kali)-[~/Desktop/HackTheBox/MonitorsThree]
+└─$ ssh root@monitorsthree.htb            
+Last login: Tue Sep 26 15:21:21 2024
+root@monitorsthree:~# ls
+root.txt  scripts
+root@monitorsthree:~# cat root.txt
+fa2a0[REDACTED]
+root@monitorsthree:~#
+```
+CONGRATS YOU CRACK THIS MACHINE❤️
+
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
