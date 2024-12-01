@@ -489,45 +489,7 @@ Because we saw in the access log that our previous ffuf command seemed to be reg
 
 ![/etc/hosts](07.png){: width="1200" height="800" }
 
-CONGRATS YOU GOT ROOT FLAG…
+CONGRATS YOU GOT `ROOT FLAG .`
 
 ![/etc/hosts](08.gif){: width="1200" height="800" }
 
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    .note-containers {
-      max-width: 600px;
-      width: 100%;
-      padding: 20px;
-      background-color: #28a745;
-      color: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      margin: 0 auto; /* Ensures the second container is centered */
-    }
-
-    .note-containers p {
-      font-size: 1.2rem;
-      line-height: 1.6;
-    }
-
-    .note-containers strong {
-      font-weight: bold;
-      font-size: 1.3rem;
-      color: #ffdd57;
-    }
-  </style>
-</head>
-<body>
-  <div class="note-containers">
-    <p>
-      This writeup will be released <strong>soon!</strong>
-    </p>
-  </div>
-</body>
-</html>
