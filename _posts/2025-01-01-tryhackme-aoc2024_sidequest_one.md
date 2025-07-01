@@ -4,7 +4,7 @@ author: c3l1kd
 categories: [TryHackMe]
 tags: [web, flask, pcap, wireshark, tshark, reverse engineering, ghidra, python]
 render_with_liquid: false
-media_subpath: /images/tryhackme_aoc2024_sidequest_one/
+img_path: /images/tryhackme_aoc2024_sidequest_one/
 image:
   path: room_image.webp
 ---
