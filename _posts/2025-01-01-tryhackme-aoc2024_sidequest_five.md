@@ -1,5 +1,5 @@
 ---
-title: "TryHackMe: AoC 2024 Side Quest Five"
+title: "AoC 2024 Side Quest Five"
 author: c3l1kd
 categories: [TryHackMe]
 tags: [web, frida, game hacking, ghidra, dns, xss, sandbox, rce, chisel, docker, npm, node, git, jwt, sudo]

@@ -1,5 +1,5 @@
 ---
-title: "TryHackMe: AoC 2024 Side Quest One"
+title: "AoC 2024 Side Quest One"
 author: c3l1kd
 categories: [TryHackMe]
 tags: [web, flask, pcap, wireshark, tshark, reverse engineering, ghidra, python]
