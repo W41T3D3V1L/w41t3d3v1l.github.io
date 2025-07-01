@@ -2,7 +2,7 @@
 title: "AoC 2024 Side Quest Four"
 author: c3l1kd
 categories: [TryHackMe]
-tags: [web, frida, game hacking, ghidra, dns, xss, sandbox, rce, chisel, docker, npm, node, git, jwt, sudo]
+tags: [web, sqli, smb, brute-forcing, phishing, bloodhound, active directory, shadow credentials, iis]s
 render_with_liquid: false
 img_path: /images/tryhackme_aoc2024_sidequest_four/
 image:
