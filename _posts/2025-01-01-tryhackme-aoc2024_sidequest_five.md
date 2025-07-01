@@ -7,5 +7,5 @@ tags: [web, frida, game hacking, ghidra, dns, xss, sandbox, rce, chisel, docker,
 render_with_liquid: false
 media_subpath: /images/tryhackme_aoc2024_sidequest_five/
 image:
-  path: room_image.webp
+  path: room_image.png
 ---
