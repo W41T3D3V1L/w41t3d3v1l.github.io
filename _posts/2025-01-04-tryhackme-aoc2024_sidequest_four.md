@@ -2,7 +2,7 @@
 title: "AoC 2024 Side Quest Four"
 author: c3l1kd
 categories: [TryHackMe]
-tags: [web, sqli, smb, brute-forcing, phishing, bloodhound, active directory, shadow credentials, iis]s
+tags: [web, sqli, smb, brute-forcing, phishing, bloodhound, active directory, shadow credentials, iis]
 render_with_liquid: false
 img_path: /images/tryhackme_aoc2024_sidequest_four/
 image:
