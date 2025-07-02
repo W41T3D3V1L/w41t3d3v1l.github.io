@@ -93,7 +93,6 @@ order: 4
     to explore and solve challenges in the world of cybersecurity. I hope you enjoy exploring my projects!
   </p>
   <img src="https://tryhackme-badges.s3.amazonaws.com/0XC3L1KD.png?update=1" alt="THM Badge" width="250" />
-
   <div class="badges">
     <img src="https://tryhackme.com/img/badges/linux.svg" />
     <img src="https://tryhackme.com/img/badges/webbed.svg" />
