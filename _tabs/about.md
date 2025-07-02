@@ -28,13 +28,11 @@ order: 4
     color: red;
     border-radius: 3px;
   }
-
   #puzzle-container, #bio-container {
     font-family: 'Ubuntu', sans-serif;
     text-align: center;
     margin-top: 40px;
   }
-
   input[type="number"] {
     padding: 12px;
     font-size: 18px;
@@ -44,7 +42,6 @@ order: 4
     max-width: 90%;
     margin-top: 20px;
   }
-
   button {
     padding: 12px 20px;
     font-size: 18px;
@@ -56,18 +53,15 @@ order: 4
     transition: background 0.3s ease, transform 0.3s ease;
     margin-top: 10px;
   }
-
   button:hover {
     background: linear-gradient(45deg, #ee0979, #ff6a00);
     transform: scale(1.05);
   }
-
   .message {
     font-size: 18px;
     margin-top: 10px;
     font-weight: bold;
   }
-
   .badges {
     display: flex;
     flex-wrap: wrap;
@@ -75,7 +69,6 @@ order: 4
     gap: 10px;
     margin-top: 40px;
   }
-
   .badges img {
     width: 80px;
     height: auto;
