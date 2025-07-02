@@ -74,7 +74,7 @@ order: 4
     height: auto;
   }
 </style>
-
+<body>
 <div id="puzzle-container">
   <p>🔐 Guess the secret number to unlock the bio and badge wall.</p>
   <input type="number" id="guess" placeholder="Enter a number between 1 and 10">
@@ -165,14 +165,12 @@ order: 4
   const messageElement = document.getElementById("message");
   const bioContainer = document.getElementById("bio-container");
   const puzzleContainer = document.getElementById("puzzle-container");
-
   function checkGuess() {
     const userGuess = parseInt(guessInput.value);
     if (isNaN(userGuess)) {
       messageElement.textContent = "❗ Please enter a valid number!";
       return;
     }
-
     if (userGuess === correctNumber) {
       messageElement.textContent = "✅ Correct! Here's my bio and badges:";
       puzzleContainer.style.display = "none";
