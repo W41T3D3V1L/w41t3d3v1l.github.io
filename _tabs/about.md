@@ -5,7 +5,6 @@ order: 4
 ---
 
 ### Hey, I'm c3l1kd.
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -181,4 +180,3 @@ order: 4
   }
 </script>
 </body>
-</html>
