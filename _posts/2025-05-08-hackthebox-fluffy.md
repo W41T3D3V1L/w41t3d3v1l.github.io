@@ -631,7 +631,7 @@ evil-winrm -i fluffy.htb -u administrator -H 8da83a3fa618b6e3a00e93f676c92a6e
 ```
 
 # ROOT.TXT
-![root](01.png){: width="1200" height="800" }
+![root](root.png){: width="1200" height="800" }
 
 ## Summary
 User : `SMB` The file leak is found `CVE-2025-24071`. After obtaining the domain user, a shadow credential attack can be performed to obtain the shadow credentials of the other three users.
