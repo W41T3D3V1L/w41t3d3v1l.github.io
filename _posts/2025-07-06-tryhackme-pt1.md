@@ -75,9 +75,9 @@ by OJ (https://github.com/OJ/gobuster)
 
 we found `http://10.200.150.100/loans/`
 
-> you found login page login with default credits `attacker` : `attacker` website so top you see `create` button. You will navigate to `http://10.200.150.100/loans/create`.
+> website so top you see `create` button. You will navigate to `http://10.200.150.100/loans/create`.
 
-JUST TEST IT WITH FAKE DETAILS 
+JUST CREATE IT WITH FAKE DETAILS 
 
 ## AS I OBSERVE!
 WHEN I CICK ON `CONTINUE` BUTTON IN NETWORK TAB I SEE THE API IS COMING `http://10.200.150.100:8080/api/v1.0/test`
